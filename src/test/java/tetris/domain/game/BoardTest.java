@@ -19,6 +19,15 @@ public class BoardTest {
     }
 
     @Test
+    public void testFillShape_EmptyBoard_Filled() {
+        final Board board = new Board(width, height);
+
+        final Board actual = board.fillShape(new Shape(5, 0, Tetromino.O));
+
+        Assert.assertEquals(new Block(6, 1, Tetromino.O), actual.getBlockAt(6, 1));
+    }
+
+    @Test
     public void testHasCollision_EmptyBoard_None() {
         final Board board = new Board(width, height);
 

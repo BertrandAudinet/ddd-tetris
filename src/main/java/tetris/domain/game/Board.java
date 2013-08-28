@@ -3,6 +3,10 @@ package tetris.domain.game;
 import java.util.Arrays;
 
 public class Board {
+    public static int DEFAULT_WIDTH = 10;
+
+    public static int DEFAULT_HEIGHT = 22;
+
     private int width;
 
     private int height;
@@ -34,16 +38,24 @@ public class Board {
     }
 
     public Board fillBlock(Block block) {
-        final Block[] newGrid = Arrays.copyOf(grid, height * width);
-        int index = block.getY() * width + block.getX();
-        newGrid[index] = block;
-        return new Board(width, height, newGrid);
+        return fillBlocks(block);
     }
 
     public Board fillShape(Shape shape) {
+        final int nbBlock = shape.getBlocks().length;
+        Block[] translatedBlocks = new Block[nbBlock];
+        for (int i = 0; i < nbBlock; i++) {
+            translatedBlocks[i] = shape.getBlocks()[i].translate(shape.getX(), shape.getY());
+        }
+        return fillBlocks(translatedBlocks);
+    }
+
+    public Board fillBlocks(Block... blocks) {
         final Block[] newGrid = Arrays.copyOf(grid, height * width);
-        int index = shape.getY() * width + shape.getX();
-        // newGrid[index] = block;
+        for (Block block : blocks) {
+            int index = block.getY() * width + block.getX();
+            newGrid[index] = block;
+        }
         return new Board(width, height, newGrid);
     }
 
@@ -71,6 +83,10 @@ public class Board {
     public Block getBlockAt(int x, int y) {
         int index = y * width + x;
         return grid[index];
+    }
+
+    public static Board defaultBoard() {
+        return new Board(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
 }

@@ -25,6 +25,10 @@ public class Block {
         return new Block(x + 1, y, tetromino);
     }
 
+    public Block translate(int dx, int dy) {
+        return new Block(x + dx, y + dy, tetromino);
+    }
+
     public int getX() {
         return x;
     }

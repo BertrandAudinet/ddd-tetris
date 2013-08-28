@@ -7,30 +7,43 @@ import org.junit.Test;
 public class BlockTest {
 
     @Test
-    public void testMoveDown() {
+    public void testMoveDown_Block_ReturnsMovedBlock() {
         final Block block = new Block(1, 1, Tetromino.I);
 
         final Block actual = block.moveDown();
 
-        Assert.assertEquals(2, actual.getY());
+        final Block expected = new Block(1, 2, Tetromino.I);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void testMoveLeft() {
+    public void testMoveLeft_Block_ReturnsMovedBlock() {
         final Block block = new Block(1, 1, Tetromino.I);
 
         final Block actual = block.moveLeft();
 
-        Assert.assertEquals(0, actual.getX());
+        final Block expected = new Block(0, 1, Tetromino.I);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void testMoveRight() {
+    public void testMoveRight_Block_ReturnsMovedBlock() {
         final Block block = new Block(1, 1, Tetromino.I);
 
         final Block actual = block.moveRight();
 
-        Assert.assertEquals(2, actual.getX());
+        final Block expected = new Block(2, 1, Tetromino.I);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testTranslate_Block_ReturnsTranslatedBlock() {
+        final Block block = new Block(1, 1, Tetromino.I);
+
+        final Block actual = block.translate(10, 5);
+
+        final Block expected = new Block(11, 6, Tetromino.I);
+        Assert.assertEquals(expected, actual);
     }
 
 }
