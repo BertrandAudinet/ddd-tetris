@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd 
+	http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+
+	<context:annotation-config />
+
+	<!-- Chargement modules CXF à partir du jar cxf.jar . Permet chargement 
+		rapide du runtime CXF et service lecteur WSDL.. -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<jaxrs:server address="/">
+		<jaxrs:serviceBeans>
+			<bean class="tetris.interfaces.playing.RestPlayingTetrisFacade">
+			</bean>
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+
+	<!-- Infrastructure layer -->
+	<bean class="tetris.infrastucture.persistence.inmemory.InMemoryGameRepository">
+	</bean>
+	
+	<!-- Application layer -->
+	<bean class="tetris.application.DefaultPlayingTetrisService">
+	</bean>
+</beans>

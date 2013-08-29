@@ -7,19 +7,19 @@ import org.junit.Test;
 public class GameTest {
 
     @Test
-    public void testMovePieceLeft_EmptyBoard_Moved() {
+    public void testMovePiece_EmptyBoard_MovedOnLeft() {
         final Game game = new Game(Board.defaultBoard(), new Shape(5, 0, Tetromino.I));
 
-        game.movePieceLeft();
+        game.movePiece(Direction.LEFT);
 
         Assert.assertEquals(4, game.getPiece().getX());
     }
 
     @Test
-    public void testMovePieceLeft_FullBoard_None() {
+    public void testMovePiece_FullBoard_NotMoved() {
         final Game game = new Game(Board.defaultBoard().fill(), new Shape(5, 0, Tetromino.I));
 
-        game.movePieceLeft();
+        game.movePiece(Direction.LEFT);
 
         Assert.assertEquals(5, game.getPiece().getX());
     }
@@ -50,4 +50,5 @@ public class GameTest {
 
         Assert.assertEquals(Tetromino.O, game.getBoard().getBlockAt(6, 1).getTetromino());
     }
+
 }

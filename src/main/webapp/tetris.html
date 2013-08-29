@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- 
+<meta http-equiv="refresh" content="1">
+ -->
+<title>Tetris Battle</title>
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://jquery-timer.googlecode.com/svn/trunk/jquery.timer.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(
+		function($) {
+			$("#push_start").click(function(event) {
+				event.stopPropagation();
+				$.ajax({
+				        type: "POST",
+				        url: '/ddd-tetris/ws/playing',
+				        contentType : 'application/json',
+				        data: '',
+				        success: function (data, textStatus, jqXHR) {
+				        	var tetrisId = data;
+				        	starting(tetrisId);
+				        },
+				        dataType : 'text'
+		    		});
+			});
+			
+			$("#join_battle").click(function(event) {
+				event.stopPropagation();
+				$.ajax({
+			        type: "POST",
+			        url: '/ddd-tetris/ws/playing',
+			        contentType : 'application/json',
+			        data: '',
+			        success: function (data, textStatus, jqXHR) {
+			        	var tetrisId = data;
+			        	joinBattle(tetrisId);
+			        },
+			        dataType : 'text'
+	    		});
+			});
+
+			var joinBattle = function(tetrisId) {
+				$.ajax({
+			        type: "POST",
+			        url: '/tetris/ws/v1/battle?tetrisId='+tetrisId,
+			        contentType : 'application/json',
+			        data: '',
+			        success: function (data, textStatus, jqXHR) {
+			        	var battleId = data;
+			        	$("#battle_id").html(battleId);
+			        	var t = $.timer(function(timer) {
+			        		this.stop();
+			        		starting(tetrisId);
+				        });
+				        t.set({ time : 100, autostart : true });
+			        },
+			        dataType : 'text'
+	    		});
+			}
+
+			var starting = function(tetrisId) {
+				$.get('/ddd-tetris/ws/playing/'+tetrisId+'/start')
+				.done(function(data, textStatus, jqXHR) {
+					start(tetrisId);
+				})
+				.fail(function(jqXHR, textStatus, errorThrown) { 
+					alert('error'); 
+				});
+			}
+
+			var start = function(tetrisId) {
+				
+				$("#tetris_id").html(tetrisId);
+
+				$('.result').empty();
+
+				// create grid
+				var result = $('.result').first();
+				for(var i=0, height=22; i < height; i++){
+					var row = $('<div></div>');
+					row.appendTo(result);
+					for(var j=0, width=10; j < width; j++){
+						row.append('<div class="square"></div>')
+					}
+					row.append('<div class="breaker">');	
+				}
+
+				// create score
+				var score = $('<div></div>');
+				score.append('<div>Level : <span id="score_level"></span></div>');
+				score.append('<div>Lines : <span id="score_lines"></span></div>');
+				score.append('<div>Score : <span id="score_points"></span></div>');
+				score.appendTo(result);
+				
+				var tetris = new Tetris(tetrisId);
+				tetris.loadBoard();
+				tetris.loadScore();
+				
+				var timer = $.timer(function() {
+					tetris.loadBoard();
+					tetris.loadScore();
+		        });
+
+		        timer.set({ time : 100, autostart : true });
+
+		        $(document).on("keydown",function(event) {
+					if (event.which == 37){
+						tetris.move('LEFT');
+						event.stopPropagation();
+	                } else if (event.which == 39) {
+	                	tetris.move('RIGHT');
+						event.stopPropagation();
+	                } else if (event.which == 38) {
+	                	tetris.rotate();
+	                } else if (event.which == 40) {
+	                	tetris.drop();
+	                }         
+	           });
+			}
+			
+			var displayGrid = function(data) {
+				var allSquare = $('.square');
+				var grid = data.Result.grid;
+				for(var i=0, width=grid.length; i < width; i++){
+					for(var j=0, height=grid[i].item.length; j < height; j++){
+						$(allSquare[i*10+j]).removeClass('IShape OShape TShape JShape lShape SShape ZShape PShape');
+						var square = grid[i].item[j];
+						$(allSquare[i*10+j]).addClass(square);
+						
+						//result.append('<div class="square '+square+'"></div>')
+					}
+					//result.append('<div class="breaker">');	
+				}
+			};
+
+			var displayScore = function(data) {
+				$('#score_level').html(data.score.level);
+				$('#score_lines').html(data.score.lines);
+				$('#score_points').html(data.score.points);
+			}
+
+			function Tetris(tetrisId) {
+				this.tetrisId = tetrisId
+
+				this.loadBoard = function() {
+					$.get('/ddd-tetris/ws/playing/'+this.tetrisId+'/board')
+					.done(function(data, textStatus, jqXHR) {
+						displayGrid(data);
+					})
+					.fail(function(jqXHR, textStatus, errorThrown) { 
+						alert('error'); 
+					});
+				}
+
+				this.loadScore = function() {
+					$.get('/ddd-tetris/ws/playing/'+this.tetrisId+'/score')
+					.done(function(data, textStatus, jqXHR) {
+						displayScore(data);
+					})
+					.fail(function(jqXHR, textStatus, errorThrown) { 
+						alert('error'); 
+					});
+				}
+        
+		        this.move = function (direction) {
+		        	$.ajax({
+				        type: "POST",
+				        url: '/ddd-tetris/ws/playing/'+this.tetrisId+'/move',
+				        contentType : 'application/json',
+				        data: '{ "move" : { "direction": '+direction+'}}',
+				        success: function () {
+				        	loadBoard();
+				       }
+		    		});
+		        }
+	        
+	        	this.rotate = function () {
+		        	$.ajax({
+				        type: "POST",
+				        url: '/ddd-tetris/ws/playing/'+this.tetrisId+'/rotate',
+				        contentType : 'application/json',
+				        data: '{ "rotate" : { "direction": RIGHT }}',
+				        success: function () {
+				        	loadBoard();
+				       }
+		    		});
+	        	}
+
+	        	this.drop = function () {
+		        	$.ajax({
+				        type: "POST",
+				        url: '/ddd-tetris/ws/playing/'+this.tetrisId+'/drop',
+				        contentType : 'application/json',
+				        success: function () {
+				        	loadBoard();
+				       }
+		    		});
+	        	}
+	        }
+                
+		}
+);
+</script>
+
+<style type="text/css">
+.square {
+	background-color: black;
+    border-color: gray;
+    border-style: solid;
+    border-width: thin;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+.breaker {
+	display: block;
+	clear: both;
+}
+
+.IShape {
+	background-color: aqua;
+}
+
+.OShape {
+	background-color: yellow;
+}
+
+.TShape {
+	background-color: fuchsia;
+}
+
+.JShape {
+	background-color: blue;
+}
+
+.LShape {
+	background-color: orange;
+}
+
+.SShape {
+	background-color: green;
+}
+
+.ZShape {
+	background-color: red;
+}
+
+.PShape {
+	background-color: gray;
+}
+
+</style>
+</head>
+<body>
+	<div id="page-body">
+		<div class="titre">TETRIS <span id="tetris_id"> - BATTLE</span><span id="battle_id"></span></div>
+		<div class="result">
+		  <a href="#" id="push_start">PUSH START</a>
+		  <a href="#" id="join_battle">JOIN BATTLE</a>
+		</div>
+	</div>
+</body>
+</html>

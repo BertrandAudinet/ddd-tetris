@@ -38,12 +38,39 @@ public class Shape {
         return new Shape(x, y + 1, tetromino);
     }
 
+    public Shape move(Direction direction) {
+        Shape movedShape = this;
+        switch (direction) {
+            case LEFT:
+                movedShape = moveLeft();
+                break;
+            case RIGHT:
+                movedShape = moveRight();
+                break;
+        }
+        return movedShape;
+    }
+
     public Shape moveLeft() {
         return new Shape(x - 1, y, tetromino);
     }
 
     public Shape moveRight() {
         return new Shape(x + 1, y, tetromino);
+    }
+
+    public Shape rotate(Direction direction) {
+        Shape rotatedShape = this;
+        switch (direction) {
+            case LEFT:
+                rotatedShape = rotateLeft();
+                break;
+
+            case RIGHT:
+                rotatedShape = rotateRight();
+                break;
+        }
+        return rotatedShape;
     }
 
     public Shape rotateLeft() {
