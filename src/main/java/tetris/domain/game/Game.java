@@ -40,11 +40,11 @@ public class Game {
 
     public void fallPiece() {
         final Shape movePiece = piece.moveDown();
-        if (!board.hasCollision(movePiece)) {
-            this.piece = movePiece;
-        } else {
+        if (board.hasCollision(movePiece)) {
             final Board filledBoard = board.fillShape(piece);
             this.board = filledBoard;
+        } else {
+            this.piece = movePiece;
         }
     }
 

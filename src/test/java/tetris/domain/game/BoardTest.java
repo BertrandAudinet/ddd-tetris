@@ -1,7 +1,6 @@
 package tetris.domain.game;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class BoardTest {
@@ -11,7 +10,7 @@ public class BoardTest {
 
     @Test
     public void testFillBlock_EmptyBoard_Filled() {
-        final Board board = new Board(width, height);
+        final Board board = Board.emptyBoard(width, height);
 
         final Board actual = board.fillBlock(new Block(0, 0, Tetromino.T));
 
@@ -20,7 +19,7 @@ public class BoardTest {
 
     @Test
     public void testFillShape_EmptyBoard_Filled() {
-        final Board board = new Board(width, height);
+        final Board board = Board.emptyBoard(width, height);
 
         final Board actual = board.fillShape(new Shape(5, 0, Tetromino.O));
 
@@ -29,7 +28,7 @@ public class BoardTest {
 
     @Test
     public void testHasCollision_EmptyBoard_None() {
-        final Board board = new Board(width, height);
+        final Board board = Board.emptyBoard(width, height);
 
         final boolean hasCollision = board.hasCollision(new Shape(5, 1, Tetromino.I));
 
@@ -38,7 +37,7 @@ public class BoardTest {
 
     @Test
     public void testHasCollision_FullBoard_Detected() {
-        final Board board = new Board(width, height).fill();
+        final Board board = Board.emptyBoard(width, height).fill();
 
         final boolean hasCollision = board.hasCollision(new Shape(5, 1, Tetromino.I));
 
@@ -47,7 +46,7 @@ public class BoardTest {
 
     @Test
     public void testHasCollision_onFirstBlock_Detected() {
-        final Board board = new Board(width, height).fillBlock(new Block(5, 2, Tetromino.I));
+        final Board board = Board.emptyBoard(width, height).fillBlock(new Block(5, 2, Tetromino.I));
 
         final boolean hasCollision = board.hasCollision(new Shape(5, 1, Tetromino.I));
 
@@ -56,11 +55,58 @@ public class BoardTest {
 
     @Test
     public void testHasCollision_onSecondBlock_Detected() {
-        final Board board = new Board(width, height).fillBlock(new Block(6, 2, Tetromino.I));
+        final Board board = Board.emptyBoard(width, height).fillBlock(new Block(6, 2, Tetromino.I));
 
         final boolean hasCollision = board.hasCollision(new Shape(5, 1, Tetromino.I));
 
         Assert.assertTrue(hasCollision);
     }
 
+    @Test
+    public void testFillLine_EmptyBoard_ReturnNewBoardWithCompletedLine() {
+        final Board board = Board.emptyBoard(width, height);
+
+        final int lastLine = height - 1;
+        final Board actual = board.fillLine(lastLine);
+
+        Block[] expected = new Block[width];
+        for (int i = 0; i < expected.length; i++) {
+            expected[i] = new Block(i, lastLine, Tetromino.T);
+        }
+
+        Assert.assertArrayEquals(expected, actual.getLineAt(lastLine));
+    }
+
+    @Test
+    public void testRemoveCompletedLines_LastLineCompleted_ReturnsEmptyBoard() {
+        final int lastLine = height - 1;
+        final Board board = Board.emptyBoard(width, height).fillLine(lastLine);
+
+        Board actual = board.removeCompletedLines();
+
+        Board expected = Board.emptyBoard(width, height);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testRemoveCompletedLines_2LastLineCompleted_ReturnsEmptyBoard() {
+        final int lastLine = height - 1;
+        final Board board = Board.emptyBoard(width, height).fillLine(lastLine).fillLine(lastLine - 1);
+
+        Board actual = board.removeCompletedLines();
+
+        Board expected = Board.emptyBoard(width, height);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testRemoveCompletedLines_LastLineUncompleted_ReturnsSameBoard() {
+        final int lastLine = height - 1;
+        final Board board = Board.emptyBoard(width, height).fillBlock(new Block(0, lastLine, Tetromino.T));
+
+        Board actual = board.removeCompletedLines();
+
+        Board expected = board;
+        Assert.assertEquals(expected, actual);
+    }
 }
