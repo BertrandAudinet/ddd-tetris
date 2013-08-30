@@ -63,6 +63,15 @@ public class BoardTest {
     }
 
     @Test
+    public void testHasCollision_onBottom_Detected() {
+        final Board board = Board.emptyBoard(width, height);
+
+        final boolean hasCollision = board.hasCollision(new Shape(5, 20, Tetromino.T));
+
+        Assert.assertTrue(hasCollision);
+    }
+
+    @Test
     public void testFillLine_EmptyBoard_ReturnNewBoardWithCompletedLine() {
         final Board board = Board.emptyBoard(width, height);
 

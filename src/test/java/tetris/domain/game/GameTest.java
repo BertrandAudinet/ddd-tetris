@@ -39,7 +39,7 @@ public class GameTest {
 
         game.fallPiece();
 
-        Assert.assertEquals(0, game.getPiece().getY());
+        Assert.assertNull(game.getPiece());
     }
 
     @Test

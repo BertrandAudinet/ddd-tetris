@@ -64,6 +64,7 @@ jQuery(document).ready(
 			}
 
 			var starting = function(tetrisId) {
+/*
 				$.get('/ddd-tetris/ws/playing/'+tetrisId+'/start')
 				.done(function(data, textStatus, jqXHR) {
 					start(tetrisId);
@@ -71,6 +72,8 @@ jQuery(document).ready(
 				.fail(function(jqXHR, textStatus, errorThrown) { 
 					alert('error'); 
 				});
+*/				
+				start(tetrisId);
 			}
 
 			var start = function(tetrisId) {
@@ -99,14 +102,14 @@ jQuery(document).ready(
 				
 				var tetris = new Tetris(tetrisId);
 				tetris.loadBoard();
-				tetris.loadScore();
+				//tetris.loadScore();
 				
 				var timer = $.timer(function() {
 					tetris.loadBoard();
-					tetris.loadScore();
+					//tetris.loadScore();
 		        });
 
-		        timer.set({ time : 100, autostart : true });
+		        timer.set({ time : 200, autostart : true });
 
 		        $(document).on("keydown",function(event) {
 					if (event.which == 37){
@@ -126,11 +129,13 @@ jQuery(document).ready(
 			var displayGrid = function(data) {
 				var allSquare = $('.square');
 				var grid = data.Result.grid;
-				for(var i=0, width=grid.length; i < width; i++){
-					for(var j=0, height=grid[i].item.length; j < height; j++){
+				for(var i=0, height=grid.length; i < height; i++){
+					for(var j=0, width=grid[i].item.length; j < width; j++){
 						$(allSquare[i*10+j]).removeClass('IShape OShape TShape JShape lShape SShape ZShape PShape');
 						var square = grid[i].item[j];
-						$(allSquare[i*10+j]).addClass(square);
+						if (square) {
+							$(allSquare[i*10+j]).addClass(square+'Shape');
+						}
 						
 						//result.append('<div class="square '+square+'"></div>')
 					}
@@ -184,7 +189,7 @@ jQuery(document).ready(
 				        type: "POST",
 				        url: '/ddd-tetris/ws/playing/'+this.tetrisId+'/rotate',
 				        contentType : 'application/json',
-				        data: '{ "rotate" : { "direction": RIGHT }}',
+				        data: '{ "rotate" : { "direction": LEFT }}',
 				        success: function () {
 				        	loadBoard();
 				       }

@@ -1,9 +1,12 @@
 package tetris.interfaces.playing;
 
+
 public interface PlayingTetrisFacade {
     String playNewTetris();
 
-    void movePiece(String tetrisId, String direction);
+    BoardDto getBoard(String tetrisId);
 
-    void rotatePiece(String tetrisId, String direction);
+    void movePiece(String tetrisId, MoveDto move);
+
+    void rotatePiece(String tetrisId, RotateDto rotate);
 }

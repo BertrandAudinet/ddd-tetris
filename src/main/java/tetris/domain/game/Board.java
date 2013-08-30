@@ -64,8 +64,12 @@ public class Board {
         for (Block sBlock : shape.getBlocks()) {
             int xGrid = shape.getX() + sBlock.getX();
             int yGrid = shape.getY() + sBlock.getY();
-            final Block block = getBlockAt(xGrid, yGrid);
-            if (block != null) {
+            if (yGrid < height) {
+                final Block block = getBlockAt(xGrid, yGrid);
+                if (block != null) {
+                    collision = true;
+                }
+            } else {
                 collision = true;
             }
         }
@@ -161,6 +165,10 @@ public class Board {
     @Override
     public String toString() {
         return "Board [width=" + width + ", height=" + height + ", grid=" + Arrays.toString(grid) + "]";
+    }
+
+    public Block[] getGrid() {
+        return grid;
     }
 
 }

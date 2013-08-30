@@ -1,6 +1,8 @@
 package tetris.infrastucture.persistence.inmemory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,6 +26,11 @@ public class InMemoryGameRepository implements GameRepository {
     public TetrisId nextTetrisId() {
         final String random = UUID.randomUUID().toString().toUpperCase();
         return new TetrisId(random.substring(0, random.indexOf("-")));
+    }
+
+    @Override
+    public List<Game> findAll() {
+        return new ArrayList<Game>(gameDb.values());
     }
 
 }

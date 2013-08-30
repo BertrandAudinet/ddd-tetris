@@ -14,6 +14,7 @@ public class Game {
 
     public Game(TetrisId tetrisId) {
         this.tetrisId = tetrisId;
+        this.board = Board.defaultBoard();
     }
 
     public void movePiece(Direction direction) {
@@ -35,6 +36,7 @@ public class Game {
         if (board.hasCollision(movePiece)) {
             final Board filledBoard = board.fillShape(piece);
             this.board = filledBoard;
+            this.piece = null;
         } else {
             this.piece = movePiece;
         }
@@ -75,6 +77,10 @@ public class Game {
         } else if (!tetrisId.equals(other.tetrisId))
             return false;
         return true;
+    }
+
+    public void dropNewPiece(Tetromino tetromino) {
+        this.piece = new Shape(3, 0, tetromino);
     }
 
 }
