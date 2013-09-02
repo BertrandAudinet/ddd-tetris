@@ -12,10 +12,14 @@ public class Shape {
     private Block[] blocks;
 
     public Shape(int x, int y, Tetromino tetromino) {
+        this(x, y, tetromino, calculateBlocks(tetromino));
+    }
+
+    public Shape(int x, int y, Tetromino tetromino, Block[] blocks) {
         this.x = x;
         this.y = y;
         this.tetromino = tetromino;
-        this.blocks = calculateBlocks(tetromino);
+        this.blocks = blocks;
     }
 
     public int getX() {
@@ -35,7 +39,7 @@ public class Shape {
     }
 
     public Shape moveDown() {
-        return new Shape(x, y + 1, tetromino);
+        return new Shape(x, y + 1, tetromino, blocks);
     }
 
     public Shape move(Direction direction) {
@@ -52,11 +56,11 @@ public class Shape {
     }
 
     public Shape moveLeft() {
-        return new Shape(x - 1, y, tetromino);
+        return new Shape(x - 1, y, tetromino, blocks);
     }
 
     public Shape moveRight() {
-        return new Shape(x + 1, y, tetromino);
+        return new Shape(x + 1, y, tetromino, blocks);
     }
 
     public Shape rotate(Direction direction) {
@@ -74,21 +78,21 @@ public class Shape {
     }
 
     public Shape rotateLeft() {
-        final Shape rotatedShape = new Shape(x, y, tetromino);
+        Block[] rotatedBlocks = new Block[blocks.length];
         for (int i = 0; i < blocks.length; i++) {
             Block block = blocks[i];
-            rotatedShape.blocks[i] = new Block(block.getY(), NB_BLOCKS - 1 - block.getX(), block.getTetromino());
+            rotatedBlocks[i] = new Block(block.getY(), NB_BLOCKS - 1 - block.getX(), block.getTetromino());
         }
-        return rotatedShape;
+        return new Shape(x, y, tetromino, rotatedBlocks);
     }
 
     public Shape rotateRight() {
-        final Shape rotatedShape = new Shape(x, y, tetromino);
+        Block[] rotatedBlocks = new Block[blocks.length];
         for (int i = 0; i < blocks.length; i++) {
             Block block = blocks[i];
-            rotatedShape.blocks[i] = new Block(NB_BLOCKS - 1 - block.getY(), block.getX(), block.getTetromino());
+            rotatedBlocks[i] = new Block(NB_BLOCKS - 1 - block.getY(), block.getX(), block.getTetromino());
         }
-        return rotatedShape;
+        return new Shape(x, y, tetromino, rotatedBlocks);
     }
 
     private static Block[] calculateBlocks(Tetromino tetromino) {
