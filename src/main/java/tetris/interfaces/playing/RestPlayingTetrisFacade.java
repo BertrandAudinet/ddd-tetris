@@ -56,7 +56,7 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
         final Shape piece = game.getPiece();
         if (piece != null) {
             for (Block block : piece.getBlocks()) {
-                grid[piece.getY() + block.getY()][piece.getX() + block.getX()] = block.getTetromino().name();
+                grid[block.getY()][block.getX()] = block.getTetromino().name();
             }
         }
 

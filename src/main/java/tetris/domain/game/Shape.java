@@ -1,5 +1,8 @@
 package tetris.domain.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Shape {
     public static int NB_BLOCKS = 4;
 
@@ -9,17 +12,20 @@ public class Shape {
 
     private Tetromino tetromino;
 
-    private Block[] blocks;
+    private int rotation;
+
+    private Tetrominoes tetrominoes;
 
     public Shape(int x, int y, Tetromino tetromino) {
-        this(x, y, tetromino, calculateBlocks(tetromino));
+        this(x, y, tetromino, 0);
     }
 
-    public Shape(int x, int y, Tetromino tetromino, Block[] blocks) {
+    public Shape(int x, int y, Tetromino tetromino, int rotation) {
         this.x = x;
         this.y = y;
         this.tetromino = tetromino;
-        this.blocks = blocks;
+        this.tetrominoes = Tetrominoes.getTetrominoes(tetromino);
+        this.rotation = rotation;
     }
 
     public int getX() {
@@ -34,12 +40,25 @@ public class Shape {
         return tetromino;
     }
 
-    public Block[] getBlocks() {
+    public int getRotation() {
+        return rotation;
+    }
+
+    public List<Block> getBlocks() {
+        List<Block> blocks = new ArrayList<Block>();
+        final int[][] picture = this.tetrominoes.getPicture(rotation);
+        for (int y = 0; y < picture.length; y++) {
+            for (int x = 0; x < picture.length; x++) {
+                if (picture[y][x] == 1) {
+                    blocks.add(new Block(x + this.x, y + this.y, tetromino));
+                }
+            }
+        }
         return blocks;
     }
 
     public Shape moveDown() {
-        return new Shape(x, y + 1, tetromino, blocks);
+        return new Shape(x, y + 1, tetromino, rotation);
     }
 
     public Shape move(Direction direction) {
@@ -56,11 +75,11 @@ public class Shape {
     }
 
     public Shape moveLeft() {
-        return new Shape(x - 1, y, tetromino, blocks);
+        return new Shape(x - 1, y, tetromino, rotation);
     }
 
     public Shape moveRight() {
-        return new Shape(x + 1, y, tetromino, blocks);
+        return new Shape(x + 1, y, tetromino, rotation);
     }
 
     public Shape rotate(Direction direction) {
@@ -78,72 +97,68 @@ public class Shape {
     }
 
     public Shape rotateLeft() {
-        Block[] rotatedBlocks = new Block[blocks.length];
-        for (int i = 0; i < blocks.length; i++) {
-            Block block = blocks[i];
-            rotatedBlocks[i] = new Block(block.getY(), NB_BLOCKS - 1 - block.getX(), block.getTetromino());
-        }
-        return new Shape(x, y, tetromino, rotatedBlocks);
+        return new Shape(x, y, tetromino, rotation - 1);
     }
 
     public Shape rotateRight() {
-        Block[] rotatedBlocks = new Block[blocks.length];
-        for (int i = 0; i < blocks.length; i++) {
-            Block block = blocks[i];
-            rotatedBlocks[i] = new Block(NB_BLOCKS - 1 - block.getY(), block.getX(), block.getTetromino());
-        }
-        return new Shape(x, y, tetromino, rotatedBlocks);
+        return new Shape(x, y, tetromino, rotation + 1);
     }
 
-    private static Block[] calculateBlocks(Tetromino tetromino) {
-        Block[] blocks = new Block[4];
-        switch (tetromino) {
-            case I:
-                blocks[0] = new Block(0, 1, tetromino);
-                blocks[1] = new Block(1, 1, tetromino);
-                blocks[2] = new Block(2, 1, tetromino);
-                blocks[3] = new Block(3, 1, tetromino);
-                break;
-            case J:
-                blocks[0] = new Block(0, 1, tetromino);
-                blocks[1] = new Block(1, 1, tetromino);
-                blocks[2] = new Block(2, 1, tetromino);
-                blocks[3] = new Block(0, 2, tetromino);
-                break;
-            case L:
-                blocks[0] = new Block(1, 1, tetromino);
-                blocks[1] = new Block(2, 1, tetromino);
-                blocks[2] = new Block(3, 1, tetromino);
-                blocks[3] = new Block(3, 2, tetromino);
-                break;
-            case O:
-                blocks[0] = new Block(1, 1, tetromino);
-                blocks[1] = new Block(2, 1, tetromino);
-                blocks[2] = new Block(2, 2, tetromino);
-                blocks[3] = new Block(1, 2, tetromino);
-                break;
-            case S:
-                blocks[0] = new Block(1, 2, tetromino);
-                blocks[1] = new Block(2, 2, tetromino);
-                blocks[2] = new Block(2, 1, tetromino);
-                blocks[3] = new Block(3, 1, tetromino);
-                break;
-            case Z:
-                blocks[0] = new Block(0, 1, tetromino);
-                blocks[1] = new Block(1, 1, tetromino);
-                blocks[2] = new Block(1, 2, tetromino);
-                blocks[3] = new Block(2, 2, tetromino);
-                break;
-            case T:
-                blocks[0] = new Block(0, 1, tetromino);
-                blocks[1] = new Block(1, 1, tetromino);
-                blocks[2] = new Block(2, 1, tetromino);
-                blocks[3] = new Block(1, 2, tetromino);
-                break;
-            default:
-                break;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + rotation;
+        result = prime * result + ((tetromino == null) ? 0 : tetromino.hashCode());
+        result = prime * result + x;
+        result = prime * result + y;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Shape other = (Shape ) obj;
+        if (rotation != other.rotation)
+            return false;
+        if (tetromino != other.tetromino)
+            return false;
+        if (x != other.x)
+            return false;
+        if (y != other.y)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Shape [x=" + x + ", y=" + y + ", tetromino=" + tetromino + ", rotation=" + rotation + "]";
+    }
+
+    public boolean contains(int x, int y) {
+        boolean isOutside = false;
+        // checks that x is outside shape
+        if (x < this.x || this.x + NB_BLOCKS <= x) {
+            isOutside = true;
         }
-        return blocks;
+        // checks that y is inside shape
+        if (y < this.y || this.y + NB_BLOCKS <= y) {
+            isOutside = true;
+        }
+
+        if (isOutside) {
+            return false;
+        } else {
+            final int[][] picture = tetrominoes.getPicture(rotation);
+            final int xInsidePosition = x - this.x;
+            final int yPosition = y - this.y;
+            return picture[yPosition][xInsidePosition] == 1;
+        }
     }
 
 }

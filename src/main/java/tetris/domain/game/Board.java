@@ -1,6 +1,8 @@
 package tetris.domain.game;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Board {
     public static int DEFAULT_WIDTH = 10;
@@ -42,12 +44,15 @@ public class Board {
     }
 
     public Board fillShape(Shape shape) {
-        final int nbBlock = shape.getBlocks().length;
-        Block[] translatedBlocks = new Block[nbBlock];
-        for (int i = 0; i < nbBlock; i++) {
-            translatedBlocks[i] = shape.getBlocks()[i].translate(shape.getX(), shape.getY());
+        List<Block> blocks = new ArrayList<Block>();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (shape.contains(x, y)) {
+                    blocks.add(new Block(x, y, shape.getTetromino()));
+                }
+            }
         }
-        return fillBlocks(translatedBlocks);
+        return fillBlocks(blocks.toArray(new Block[blocks.size()]));
     }
 
     public Board fillBlocks(Block... blocks) {
@@ -61,19 +66,37 @@ public class Board {
 
     public boolean hasCollision(Shape shape) {
         boolean collision = false;
-        for (Block sBlock : shape.getBlocks()) {
-            int xGrid = shape.getX() + sBlock.getX();
-            int yGrid = shape.getY() + sBlock.getY();
-            if (yGrid < height) {
-                final Block block = getBlockAt(xGrid, yGrid);
-                if (block != null) {
+
+        final List<Block> blocks = shape.getBlocks();
+        for (Block block : blocks) {
+            if (contains(block.getX(), block.getY())) {
+                final Block gridBlock = getBlockAt(block.getX(), block.getY());
+                if (gridBlock != null) {
                     collision = true;
                 }
             } else {
                 collision = true;
             }
         }
+        // for (int y = shape.getY(); y < shape.getY() + Shape.NB_BLOCKS; y++) {
+        // for (int x = shape.getX(); x < shape.getX() + Shape.NB_BLOCKS; x++) {
+        // if (contains(x, y)) {
+        // final Block block = getBlockAt(x, y);
+        // if (block != null) {
+        // if (shape.contains(block.getX(), block.getY())) {
+        // collision = true;
+        // }
+        // }
+        // } else {
+        // collision = true;
+        // }
+        // }
+        // }
         return collision;
+    }
+
+    private boolean contains(int x, int y) {
+        return 0 <= x && x < width && 0 <= y && y < height;
     }
 
     public int getWidth() {
