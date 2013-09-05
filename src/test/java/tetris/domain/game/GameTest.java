@@ -51,4 +51,12 @@ public class GameTest {
         Assert.assertEquals(Tetromino.O, game.getBoard().getBlockAt(6, 1).getTetromino());
     }
 
+    @Test
+    public void testDropNewPiece_FullBoard_ReturnsIsLost() {
+        final Game game = new Game(Board.defaultBoard().fill(), new Shape(5, 0, Tetromino.O));
+
+        game.dropNewPiece(Tetromino.T);
+
+        Assert.assertTrue(game.isLost());
+    }
 }

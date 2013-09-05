@@ -48,4 +48,15 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
         log.info("Rotated piece for tetris " + tetrisId + " to " + direction);
     }
 
+    @Override
+    public void dropPiece(TetrisId tetrisId) {
+        final Game game = gameRepository.find(tetrisId);
+
+        game.dropPiece();
+
+        gameRepository.store(game);
+        log.info("Dropped piece for tetris " + tetrisId);
+
+    }
+
 }

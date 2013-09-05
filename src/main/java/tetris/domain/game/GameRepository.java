@@ -10,4 +10,6 @@ public interface GameRepository {
     public TetrisId nextTetrisId();
 
     List<Game> findAll();
+
+    List<Game> findStartedGames();
 }

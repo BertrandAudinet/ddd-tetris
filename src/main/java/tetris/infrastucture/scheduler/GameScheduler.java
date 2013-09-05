@@ -17,7 +17,7 @@ public class GameScheduler {
     private GameRepository gameRepository;
 
     public void run() {
-        final List<Game> games = gameRepository.findAll();
+        final List<Game> games = gameRepository.findStartedGames();
         for (Game game : games) {
             if (game.getPiece() == null) {
                 game.dropNewPiece(nextTetromino());

@@ -7,6 +7,8 @@ public class Game {
 
     private TetrisId tetrisId;
 
+    private boolean lost = false;
+
     public Game(Board board, Shape piece) {
         this.board = board;
         this.piece = piece;
@@ -29,6 +31,14 @@ public class Game {
         if (!board.hasCollision(rotatedShape)) {
             this.piece = rotatedShape;
         }
+    }
+
+    public void dropPiece() {
+        final Shape movedShape = piece.moveDown();
+        if (!board.hasCollision(movedShape)) {
+            this.piece = movedShape;
+        }
+
     }
 
     public void fallPiece() {
@@ -81,6 +91,16 @@ public class Game {
 
     public void dropNewPiece(Tetromino tetromino) {
         this.piece = new Shape(3, 0, tetromino);
+        if (board.hasCollision(piece)) {
+            this.lost = true;
+        }
     }
 
+    public boolean isLost() {
+        return lost;
+    }
+
+    public boolean isStarted() {
+        return !lost;
+    }
 }

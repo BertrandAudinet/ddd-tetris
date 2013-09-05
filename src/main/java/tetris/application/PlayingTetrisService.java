@@ -11,4 +11,6 @@ public interface PlayingTetrisService {
 
     void rotatePiece(TetrisId tetrisId, Direction direction);
 
+    void dropPiece(TetrisId tetrisId);
+
 }

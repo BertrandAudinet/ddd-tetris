@@ -33,4 +33,14 @@ public class InMemoryGameRepository implements GameRepository {
         return new ArrayList<Game>(gameDb.values());
     }
 
+    @Override
+    public List<Game> findStartedGames() {
+        List<Game> startedGames = new ArrayList<Game>();
+        for (Game game : gameDb.values()) {
+            if (game.isStarted()) {
+                startedGames.add(game);
+            }
+        }
+        return startedGames;
+    }
 }

@@ -85,4 +85,11 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
         playingTetrisService.rotatePiece(new TetrisId(tetrisId), Direction.valueOf(rotate.getDirection()));
     }
 
+    @POST
+    @Path("/{tetrisId}/drop")
+    @Consumes({"application/json" })
+    public void drop(@PathParam("tetrisId")
+    String tetrisId) {
+        playingTetrisService.dropPiece(new TetrisId(tetrisId));
+    }
 }
