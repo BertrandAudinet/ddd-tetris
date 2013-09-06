@@ -78,20 +78,6 @@ public class Board {
                 collision = true;
             }
         }
-        // for (int y = shape.getY(); y < shape.getY() + Shape.NB_BLOCKS; y++) {
-        // for (int x = shape.getX(); x < shape.getX() + Shape.NB_BLOCKS; x++) {
-        // if (contains(x, y)) {
-        // final Block block = getBlockAt(x, y);
-        // if (block != null) {
-        // if (shape.contains(block.getX(), block.getY())) {
-        // collision = true;
-        // }
-        // }
-        // } else {
-        // collision = true;
-        // }
-        // }
-        // }
         return collision;
     }
 
@@ -121,20 +107,44 @@ public class Board {
     }
 
     public Board removeCompletedLines() {
-        final Block[] newGrid = Arrays.copyOf(grid, height * width);
+        boolean[] completedLines = new boolean[height];
+
+        // search completed lines
         for (int y = 0; y < height; y++) {
-            boolean completedLine = true;
+            completedLines[y] = true;
             for (int x = 0; x < width; x++) {
                 final Block block = getBlockAt(x, y);
                 if (block == null) {
-                    completedLine = false;
-                    break;
+                    completedLines[y] = false;
                 }
             }
-            if (completedLine) {
+        }
+
+        // remove completed lines
+        final Block[] newGrid = Arrays.copyOf(grid, height * width);
+        for (int y = 0; y < height; y++) {
+            if (completedLines[y]) {
                 for (int x = 0; x < width; x++) {
-                    int index = y * width + x;
-                    newGrid[index] = null;
+                    newGrid[y * width + x] = null;
+                }
+            }
+        }
+
+        // fall empty lines
+        int offset = 0;
+        for (int y = height - 1; y >= 0; y--) {
+            if (completedLines[y]) {
+                y--;
+                offset++;
+            }
+            for (int x = 0; x < width; x++) {
+                int index = y * width + x;
+                int newIndex = (y + offset) * width + x;
+                if (newGrid[index] != null) {
+                    newGrid[newIndex] = newGrid[index].translate(0, offset);
+                    if (offset > 0) {
+                        newGrid[index] = null;
+                    }
                 }
             }
         }

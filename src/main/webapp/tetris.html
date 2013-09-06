@@ -141,6 +141,19 @@ jQuery(document).ready(
 					}
 					//result.append('<div class="breaker">');	
 				}
+
+				// display piece
+				var pieceGrid = data.Result.piece.grid;
+				for(var i=0; i < 4; i++){
+					for(var j=0; j < 4; j++){
+						var square = pieceGrid[i].item[j];
+						var index = (i+data.Result.piece.y)*10+(j+data.Result.piece.x);
+						if (square) {
+							$(allSquare[index]).addClass(square+'Shape');
+						}
+					}
+				}
+				
 			};
 
 			var displayScore = function(data) {
@@ -189,7 +202,7 @@ jQuery(document).ready(
 				        type: "POST",
 				        url: '/ddd-tetris/ws/playing/'+this.tetrisId+'/rotate',
 				        contentType : 'application/json',
-				        data: '{ "rotate" : { "direction": LEFT }}',
+				        data: '{ "rotate" : { "direction": RIGHT }}',
 				        success: function () {
 				        	loadBoard();
 				       }

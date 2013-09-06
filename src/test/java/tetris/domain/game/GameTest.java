@@ -43,12 +43,15 @@ public class GameTest {
     }
 
     @Test
-    public void testFallPiece_FullBoard_PieceFilled() {
-        final Game game = new Game(Board.defaultBoard().fill(), new Shape(5, 0, Tetromino.O));
+    public void testFallPiece_OnCollision_PieceFilled() {
+        final int lastLine = Board.DEFAULT_HEIGHT - 1;
+        final Game game =
+                        new Game(Board.defaultBoard().fillShape(new Shape(3, lastLine - 1, Tetromino.O)), new Shape(3,
+                                        lastLine - 3, Tetromino.O));
 
         game.fallPiece();
 
-        Assert.assertEquals(Tetromino.O, game.getBoard().getBlockAt(6, 1).getTetromino());
+        Assert.assertEquals(Tetromino.O, game.getBoard().getBlockAt(5, lastLine - 3).getTetromino());
     }
 
     @Test

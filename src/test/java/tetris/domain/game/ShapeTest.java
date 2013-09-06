@@ -38,7 +38,7 @@ public class ShapeTest {
 
         final Shape actual = shape.rotateLeft();
 
-        Assert.assertEquals(-1, actual.getRotation());
+        Assert.assertEquals(1, actual.getRotation());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ShapeTest {
 
         final Shape actual = shape.rotateRight().rotateRight();
 
-        Assert.assertEquals(2, actual.getRotation());
+        Assert.assertEquals(0, actual.getRotation());
     }
 
     @Test

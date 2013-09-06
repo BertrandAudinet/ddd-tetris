@@ -25,7 +25,7 @@ public class Shape {
         this.y = y;
         this.tetromino = tetromino;
         this.tetrominoes = Tetrominoes.getTetrominoes(tetromino);
-        this.rotation = rotation;
+        this.rotation = this.tetrominoes.getRotation(rotation);
     }
 
     public int getX() {

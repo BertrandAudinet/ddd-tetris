@@ -118,6 +118,17 @@ public class BoardTest {
     }
 
     @Test
+    public void testRemoveCompletedLines_LastLineCompleted_ReturnsFallenBoard() {
+        final int lastLine = height - 1;
+        final Board board = Board.emptyBoard(width, height).fillLine(lastLine).fillBlock(new Block(3, 0, Tetromino.T));
+
+        Board actual = board.removeCompletedLines();
+
+        Board expected = Board.emptyBoard(width, height).fillBlock(new Block(3, 1, Tetromino.T));
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     public void testRemoveCompletedLines_LastLineUncompleted_ReturnsSameBoard() {
         final int lastLine = height - 1;
         final Board board = Board.emptyBoard(width, height).fillBlock(new Block(0, lastLine, Tetromino.T));

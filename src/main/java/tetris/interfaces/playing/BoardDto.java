@@ -12,6 +12,8 @@ public class BoardDto {
 
     private int score;
 
+    private PieceDto piece;
+
     public int getLevel() {
         return level;
     }
@@ -42,5 +44,13 @@ public class BoardDto {
 
     public void setGrid(String[][] grid) {
         this.grid = grid;
+    }
+
+    public PieceDto getPiece() {
+        return piece;
+    }
+
+    public void setPiece(PieceDto piece) {
+        this.piece = piece;
     }
 }

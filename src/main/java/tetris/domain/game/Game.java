@@ -44,9 +44,10 @@ public class Game {
     public void fallPiece() {
         final Shape movePiece = piece.moveDown();
         if (board.hasCollision(movePiece)) {
-            final Board filledBoard = board.fillShape(piece);
-            this.board = filledBoard;
+            this.board = board.fillShape(piece);
             this.piece = null;
+            // remove completed lines
+            this.board = board.removeCompletedLines();
         } else {
             this.piece = movePiece;
         }

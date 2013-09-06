@@ -54,16 +54,26 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
 
         // Copy piece
         final Shape piece = game.getPiece();
+        PieceDto pieceDto = null;
         if (piece != null) {
+            pieceDto = new PieceDto();
+            pieceDto.setRotation(piece.getRotation());
+            pieceDto.setTetromino(piece.getTetromino().name());
+            pieceDto.setX(piece.getX());
+            pieceDto.setY(piece.getY());
+
+            String[][] pieceGrid = new String[Shape.NB_BLOCKS][Shape.NB_BLOCKS];
             for (Block block : piece.getBlocks()) {
-                grid[block.getY()][block.getX()] = block.getTetromino().name();
+                pieceGrid[block.getY() - piece.getY()][block.getX() - piece.getX()] = block.getTetromino().name();
             }
+            pieceDto.setGrid(pieceGrid);
         }
 
         BoardDto boardDto = new BoardDto();
         boardDto.setLevel(0);
         boardDto.setScore(0);
         boardDto.setGrid(grid);
+        boardDto.setPiece(pieceDto);
         return boardDto;
     }
 

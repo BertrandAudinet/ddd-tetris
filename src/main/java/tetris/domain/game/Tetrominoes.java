@@ -12,13 +12,13 @@ public class Tetrominoes {
                     new int[][]{{0, 1, 0, 0 }, {0, 1, 1, 0 }, {0, 1, 0, 0 }, {0, 0, 0, 0 } });
 
     public static final Tetrominoes L_Tetrominoes = new Tetrominoes(new int[][]{{0, 0, 0, 0 }, {1, 1, 1, 0 },
-                    {0, 0, 0, 0 }, {0, 0, 0, 0 } }, new int[][]{{1, 1, 0, 0 }, {0, 1, 0, 0 }, {0, 1, 0, 0 },
+                    {1, 0, 0, 0 }, {0, 0, 0, 0 } }, new int[][]{{1, 1, 0, 0 }, {0, 1, 0, 0 }, {0, 1, 0, 0 },
                     {0, 0, 0, 0 } }, new int[][]{{0, 0, 1, 0 }, {1, 1, 1, 0 }, {0, 0, 0, 0 }, {0, 0, 0, 0 } },
                     new int[][]{{0, 1, 0, 0 }, {0, 1, 0, 0 }, {0, 1, 1, 0 }, {0, 0, 0, 0 } });
 
     public static final Tetrominoes J_Tetrominoes = new Tetrominoes(new int[][]{{1, 0, 0, 0 }, {1, 1, 1, 0 },
                     {0, 0, 0, 0 }, {0, 0, 0, 0 } }, new int[][]{{0, 1, 1, 0 }, {0, 1, 0, 0 }, {0, 1, 0, 0 },
-                    {0, 1, 0, 0 } }, new int[][]{{0, 0, 0, 0 }, {1, 1, 1, 0 }, {0, 0, 1, 0 }, {0, 0, 0, 0 } },
+                    {0, 0, 0, 0 } }, new int[][]{{0, 0, 0, 0 }, {1, 1, 1, 0 }, {0, 0, 1, 0 }, {0, 0, 0, 0 } },
                     new int[][]{{0, 1, 0, 0 }, {0, 1, 0, 0 }, {1, 1, 0, 0 }, {0, 0, 0, 0 } });
 
     public static final Tetrominoes Z_Tetrominoes = new Tetrominoes(new int[][]{{0, 0, 0, 0 }, {1, 1, 0, 0 },
@@ -69,13 +69,19 @@ public class Tetrominoes {
     }
 
     public int[][] getPicture(int rotation) {
+        int position = getRotation(rotation);
+        return positions[position];
+    }
+
+    public int getRotation(int rotation) {
+        final int rotationNumber = getRotationNumber();
         int position = 0;
         if (rotation < 0) {
-            position = (getRotationNumber() - ((-rotation) % getRotationNumber())) % getRotationNumber();
+            position = (rotationNumber - ((-rotation) % rotationNumber)) % rotationNumber;
         } else {
-            position = rotation % getRotationNumber();
+            position = rotation % rotationNumber;
         }
-        return positions[position];
+        return position;
     }
 
 }
