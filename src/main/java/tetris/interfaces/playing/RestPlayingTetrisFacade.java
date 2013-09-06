@@ -15,6 +15,7 @@ import tetris.domain.game.Board;
 import tetris.domain.game.Direction;
 import tetris.domain.game.Game;
 import tetris.domain.game.GameRepository;
+import tetris.domain.game.Score;
 import tetris.domain.game.Shape;
 import tetris.domain.game.TetrisId;
 
@@ -69,11 +70,17 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
             pieceDto.setGrid(pieceGrid);
         }
 
+        ScoreDto scoreDto = new ScoreDto();
+        Score score = game.getScore();
+        scoreDto.setLevel(score.getLevel());
+        scoreDto.setLines(score.getLines());
+        scoreDto.setPoints(score.getPoints());
+
         BoardDto boardDto = new BoardDto();
-        boardDto.setLevel(0);
-        boardDto.setScore(0);
+        boardDto.setScore(scoreDto);
         boardDto.setGrid(grid);
         boardDto.setPiece(pieceDto);
+        boardDto.setGameOver(game.isLost());
         return boardDto;
     }
 

@@ -6,37 +6,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class BoardDto {
     private String[][] grid;
 
-    private int level;
-
-    private int lines;
-
-    private int score;
+    private ScoreDto score;
 
     private PieceDto piece;
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getLines() {
-        return lines;
-    }
-
-    public void setLines(int lines) {
-        this.lines = lines;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
+    private boolean gameOver;
 
     public String[][] getGrid() {
         return grid;
@@ -52,5 +26,21 @@ public class BoardDto {
 
     public void setPiece(PieceDto piece) {
         this.piece = piece;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameover) {
+        this.gameOver = gameover;
+    }
+
+    public ScoreDto getScore() {
+        return score;
+    }
+
+    public void setScore(ScoreDto score) {
+        this.score = score;
     }
 }

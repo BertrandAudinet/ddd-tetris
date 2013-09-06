@@ -9,6 +9,8 @@ public class Game {
 
     private boolean lost = false;
 
+    private Score score = new Score(0);
+
     public Game(Board board, Shape piece) {
         this.board = board;
         this.piece = piece;
@@ -47,6 +49,7 @@ public class Game {
             this.board = board.fillShape(piece);
             this.piece = null;
             // remove completed lines
+            score = score.addLines(board.getCompletedLinesNumber());
             this.board = board.removeCompletedLines();
         } else {
             this.piece = movePiece;
@@ -59,6 +62,10 @@ public class Game {
 
     public Shape getPiece() {
         return piece;
+    }
+
+    public Score getScore() {
+        return score;
     }
 
     public TetrisId getTetrisId() {
@@ -104,4 +111,5 @@ public class Game {
     public boolean isStarted() {
         return !lost;
     }
+
 }

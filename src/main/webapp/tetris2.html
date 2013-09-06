@@ -15,7 +15,7 @@
 <script type="text/javascript">
 jQuery(document).ready(
 		function($) {
-			$("#gameover").hide();
+			$("#youlose").hide();
 			
 			$("#push_start").click(function(event) {
 				event.stopPropagation();
@@ -147,16 +147,19 @@ jQuery(document).ready(
 					var currentPiece = $('#'+piece.tetromino+'Shape');
 					// descente classique
 					
-					var y = piece.y * 23 + 23;
-					var x = piece.x * 23 + 23;
+					var y = piece.y * 23 + 46;
+					var x = piece.x * 23 + 46;
 					var rotation = piece.rotation * (90);
 					currentPiece.css({ left: x+'px', top: y+'px', transform: 'rotate('+rotation+'deg)' });
 					currentPiece.show();
 					
-					// descente animée
-					//currentPiece.animate({ "left": "+=0px", "top": "+=23px" }, "fast" );
 				}
+
+				displayScore(data.Result);
 				
+				if (data.Result.gameOver) {
+					$("#youlose").show();
+				}
 			};
 
 			var displayScore = function(data) {
@@ -280,7 +283,7 @@ jQuery(document).ready(
 	position: absolute;
 	left: 50px;
 	top: 50px;
-	padding: 23px;
+	padding: 46px;
 }
 
 .board table {
@@ -297,8 +300,8 @@ jQuery(document).ready(
 
 .shape {
 	position: absolute;
-	top: 23px;
-	left: 23px;
+	top: 46px;
+	left: 46px;
 	transform-origin: 37.5% 37.5%;
 }
 
@@ -307,40 +310,42 @@ jQuery(document).ready(
 }
 
 #IShape {
-	top: 23px;
-	left: 23px;
+	top: 46px;
+	left: 46px;
 }
 
 #TShape {
-	top: 23px;
-	left: 138px;
+	top: 46px;
+	left: 184px;
 }
 
 #LShape {
 	top: 161px;
-	left: 23px;
+	left: 46px;
 }
 
 #JShape {
 	top: 161px;
-	left: 138px;
+	left: 184px;
 }
 
 #ZShape {
-	top: 322px;
-	left: 23px;
+	top: 276px;
+	left: 46px;
+	transform-origin: 50% 50%;
 }
 
 #SShape {
-	top: 322px;
-	left: 138px;
+	top: 276px;
+	left: 184px;
+	transform-origin: 50% 50%;
 }
 
 #OShape {
-	top: 414px;
-	left: 138px;
+	top: 391px;
+	left: 115px;
 }
-                
+
 .shape table {
 	border-collapse: collapse;
 }
@@ -354,11 +359,22 @@ div.shape td {
 	text-align: center;
 }
 
-
 #gameover {
 	color: red;
 	font-style: oblique;
 	font-weight: bold;
+}
+
+#youlose {
+	position: absolute;
+	left: 96px;
+	top: 50px;
+	color: red;
+	font-style: italic;
+	font-weight: bold;
+	font-size: x-large;
+	color: red;
+	top: 50px;
 }
 </style>
 </head>
@@ -857,7 +873,18 @@ div.shape td {
 					</tr>
 				</table>
 			</div>
-			<div id="youlose"></div>
+			<div id="youlose">You lose!</div>
+			<div>
+				<div>
+					Level : <span id="score_level"></span>
+				</div>
+				<div>
+					Lines : <span id="score_lines"></span>
+				</div>
+				<div>
+					Score : <span id="score_points"></span>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

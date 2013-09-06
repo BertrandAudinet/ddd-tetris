@@ -204,4 +204,26 @@ public class Board {
         return grid;
     }
 
+    public int getCompletedLinesNumber() {
+        boolean[] completedLines = new boolean[height];
+
+        // search completed lines
+        for (int y = 0; y < height; y++) {
+            completedLines[y] = true;
+            for (int x = 0; x < width; x++) {
+                final Block block = getBlockAt(x, y);
+                if (block == null) {
+                    completedLines[y] = false;
+                }
+            }
+        }
+
+        int count = 0;
+        for (boolean completed : completedLines) {
+            if (completed) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
