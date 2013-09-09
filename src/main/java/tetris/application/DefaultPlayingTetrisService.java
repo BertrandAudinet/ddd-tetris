@@ -56,7 +56,16 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
 
         gameRepository.store(game);
         log.info("Dropped piece for tetris " + tetrisId);
+    }
 
+    @Override
+    public void startTetris(TetrisId tetrisId) {
+        final Game game = gameRepository.find(tetrisId);
+
+        game.start();
+
+        gameRepository.store(game);
+        log.info("Started tetris " + tetrisId);
     }
 
 }

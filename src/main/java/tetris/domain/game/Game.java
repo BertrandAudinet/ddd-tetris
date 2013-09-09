@@ -7,6 +7,8 @@ public class Game {
 
     private TetrisId tetrisId;
 
+    private boolean started = false;
+
     private boolean lost = false;
 
     private Score score = new Score(0);
@@ -72,6 +74,30 @@ public class Game {
         return tetrisId;
     }
 
+    public boolean isLost() {
+        return lost;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void start() {
+        this.started = true;
+    }
+
+    public void stop() {
+        this.started = false;
+    }
+
+    public void dropNewPiece(Tetromino tetromino) {
+        this.piece = new Shape(3, 0, tetromino);
+        if (board.hasCollision(piece)) {
+            this.lost = true;
+            this.started = false;
+        }
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -95,21 +121,6 @@ public class Game {
         } else if (!tetrisId.equals(other.tetrisId))
             return false;
         return true;
-    }
-
-    public void dropNewPiece(Tetromino tetromino) {
-        this.piece = new Shape(3, 0, tetromino);
-        if (board.hasCollision(piece)) {
-            this.lost = true;
-        }
-    }
-
-    public boolean isLost() {
-        return lost;
-    }
-
-    public boolean isStarted() {
-        return !lost;
     }
 
 }

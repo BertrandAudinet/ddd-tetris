@@ -1,6 +1,5 @@
 package tetris.interfaces.playing;
 
-
 public interface PlayingTetrisFacade {
     String playNewTetris();
 
@@ -9,4 +8,6 @@ public interface PlayingTetrisFacade {
     void movePiece(String tetrisId, MoveDto move);
 
     void rotatePiece(String tetrisId, RotateDto rotate);
+
+    void start(String tetrisId);
 }

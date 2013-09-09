@@ -109,4 +109,11 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
     String tetrisId) {
         playingTetrisService.dropPiece(new TetrisId(tetrisId));
     }
+
+    @GET
+    @Path("/{tetrisId}/start")
+    public void start(@PathParam("tetrisId")
+    String tetrisId) {
+        playingTetrisService.startTetris(new TetrisId(tetrisId));
+    }
 }

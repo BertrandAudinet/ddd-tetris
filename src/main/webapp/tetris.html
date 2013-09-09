@@ -64,7 +64,6 @@ jQuery(document).ready(
 			}
 
 			var starting = function(tetrisId) {
-/*
 				$.get('/ddd-tetris/ws/playing/'+tetrisId+'/start')
 				.done(function(data, textStatus, jqXHR) {
 					start(tetrisId);
@@ -72,7 +71,6 @@ jQuery(document).ready(
 				.fail(function(jqXHR, textStatus, errorThrown) { 
 					alert('error'); 
 				});
-*/				
 				start(tetrisId);
 			}
 
@@ -282,7 +280,7 @@ jQuery(document).ready(
 		<div class="titre">TETRIS <span id="tetris_id"> - BATTLE</span><span id="battle_id"></span></div>
 		<div class="result">
 		  <a href="#" id="push_start">PUSH START</a>
-		  <a href="#" id="join_battle">JOIN BATTLE</a>
+		  <!-- <a href="#" id="join_battle">JOIN BATTLE</a> -->
 		</div>
 	</div>
 </body>

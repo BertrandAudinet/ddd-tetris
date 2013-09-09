@@ -20,6 +20,8 @@
 		<jaxrs:serviceBeans>
 			<bean class="tetris.interfaces.playing.RestPlayingTetrisFacade">
 			</bean>
+			<bean class="tetris.interfaces.playing.RestPlayingBattleFacade">
+			</bean>
 		</jaxrs:serviceBeans>
 	</jaxrs:server>
 
@@ -27,17 +29,27 @@
 	<bean
 		class="tetris.infrastucture.persistence.inmemory.InMemoryGameRepository">
 	</bean>
-
-	<bean id="executingTetrisService" class="tetris.infrastucture.scheduler.GameScheduler">
+	<bean
+		class="tetris.infrastucture.persistence.inmemory.InMemoryBattleRepository">
 	</bean>
 
-	<task:scheduled-tasks scheduler="tetrisScheduler">
-    	<task:scheduled ref="executingTetrisService" method="run" fixed-rate="800"/>
+	<bean id="tetrisScheduler" class="tetris.infrastucture.scheduler.GameScheduler">
+	</bean>
+	<bean id="battleScheduler" class="tetris.infrastucture.scheduler.BattleScheduler">
+	</bean>
+
+	<task:scheduler id="gameScheduler" pool-size="10"/>
+
+	<task:scheduled-tasks scheduler="gameScheduler">
+    	<task:scheduled ref="tetrisScheduler" method="run" fixed-rate="800"/>
+    	<task:scheduled ref="battleScheduler" method="run" fixed-rate="30000"/>
 	</task:scheduled-tasks>
 
-	<task:scheduler id="tetrisScheduler" pool-size="10"/>
 
 	<!-- Application layer -->
 	<bean class="tetris.application.DefaultPlayingTetrisService">
+	</bean>
+
+	<bean class="tetris.application.DefaultPlayingBattleService">
 	</bean>
 </beans>

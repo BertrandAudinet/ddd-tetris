@@ -35,39 +35,62 @@ jQuery(document).ready(
 			$("#join_battle").click(function(event) {
 				event.stopPropagation();
 				$.ajax({
-			        type: "POST",
-			        url: '/ddd-tetris/ws/playing',
-			        contentType : 'application/json',
-			        data: '',
-			        success: function (data, textStatus, jqXHR) {
-			        	var tetrisId = data;
-			        	joinBattle(tetrisId);
-			        },
-			        dataType : 'text'
-	    		});
+				        type: "POST",
+				        url: '/ddd-tetris/ws/playing',
+				        contentType : 'application/json',
+				        data: '',
+				        success: function (data, textStatus, jqXHR) {
+				        	var tetrisId = data;
+				        	joinBattle(tetrisId);
+				        },
+				        dataType : 'text'
+		    		});
 			});
 
 			var joinBattle = function(tetrisId) {
 				$.ajax({
 			        type: "POST",
-			        url: '/tetris/ws/v1/battle?tetrisId='+tetrisId,
+			        url: '/ddd-tetris/ws/battles?tetrisId='+tetrisId,
 			        contentType : 'application/json',
 			        data: '',
 			        success: function (data, textStatus, jqXHR) {
 			        	var battleId = data;
 			        	$("#battle_id").html(battleId);
-			        	var t = $.timer(function(timer) {
-			        		this.stop();
-			        		starting(tetrisId);
-				        });
-				        t.set({ time : 100, autostart : true });
+			        	waitingStartBattle(battleId, tetrisId);
 			        },
 			        dataType : 'text'
 	    		});
 			}
 
+			var waitingStartBattle = function(battleId, tetrisId) {
+				var timer = $.timer(
+						function() {
+							$.get('/ddd-tetris/ws/battles/'+battleId)
+							.done(function(data, textStatus, jqXHR) {
+								var battle = data.battle;
+								if (battle.status == 'AWAITED') {
+									waitingStartBattle(battleId, tetrisId);
+								} else {
+									startingBattle(battleId, tetrisId);
+								}
+									
+							})
+							.fail(function(jqXHR, textStatus, errorThrown) { 
+								alert('error'); 
+							});
+						},
+						1000,
+						false
+					);
+			    timer.once(1000);
+			}
+
+			var startingBattle = function(battleId, tetrisId) {
+				$("#battle_id").html(battleId);
+				starting(tetrisId);
+			}
+			
 			var starting = function(tetrisId) {
-/*
 				$.get('/ddd-tetris/ws/playing/'+tetrisId+'/start')
 				.done(function(data, textStatus, jqXHR) {
 					start(tetrisId);
@@ -75,8 +98,6 @@ jQuery(document).ready(
 				.fail(function(jqXHR, textStatus, errorThrown) { 
 					alert('error'); 
 				});
-*/				
-				start(tetrisId);
 			}
 
 			var tetris;
@@ -381,7 +402,7 @@ div.shape td {
 <body>
 	<div id="page-body">
 		<div class="titre">
-			TETRIS <span id="tetris_id"> - BATTLE</span><span id="battle_id"></span>
+			TETRIS <span id="tetris_id"></span>
 		</div>
 		<div class="result">
 			<a href="#" id="push_start">PUSH START</a> <a href="#"
@@ -884,6 +905,11 @@ div.shape td {
 				<div>
 					Score : <span id="score_points"></span>
 				</div>
+			</div>
+		</div>
+		<div class="battle">
+			<div class="titre">
+				BATTLE <span id="battle_id"></span>
 			</div>
 		</div>
 	</div>
