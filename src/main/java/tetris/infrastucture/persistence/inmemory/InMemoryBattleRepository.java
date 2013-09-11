@@ -11,13 +11,14 @@ import tetris.domain.battle.Battle;
 import tetris.domain.battle.BattleId;
 import tetris.domain.battle.BattleRepository;
 import tetris.domain.battle.BattleStatus;
+import tetris.domain.game.TetrisId;
 
 public class InMemoryBattleRepository implements BattleRepository {
     private Map<BattleId, Battle> battleDb = new HashMap<BattleId, Battle>();
 
     @Override
     public void store(Battle battle) {
-        battleDb.put(battle.getId(), battle);
+        battleDb.put(battle.getBattleId(), battle);
     }
 
     @Override
@@ -41,5 +42,16 @@ public class InMemoryBattleRepository implements BattleRepository {
             }
         }
         return lookupBattle;
+    }
+
+    @Override
+    public Battle lookupBattleOfTetrisId(TetrisId tetrisId) {
+        final Collection<Battle> values = battleDb.values();
+        for (Battle battle : values) {
+            if (battle.contains(tetrisId)) {
+                return battle;
+            }
+        }
+        return null;
     }
 }

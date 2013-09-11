@@ -45,8 +45,14 @@
     	<task:scheduled ref="battleScheduler" method="run" fixed-rate="30000"/>
 	</task:scheduled-tasks>
 
-
+	<!-- Domain layer -->
+	<bean class="tetris.domain.battle.BattleJoinService">
+	</bean>
+	
 	<!-- Application layer -->
+	<bean class="tetris.application.ApplicationEvents">
+	</bean>
+	
 	<bean class="tetris.application.DefaultPlayingTetrisService">
 	</bean>
 

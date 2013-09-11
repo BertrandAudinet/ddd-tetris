@@ -20,7 +20,7 @@ import tetris.domain.game.Shape;
 import tetris.domain.game.TetrisId;
 
 @Path("/playing")
-public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
+public class RestPlayingTetrisFacade {
     @Autowired
     private PlayingTetrisService playingTetrisService;
 
@@ -29,7 +29,6 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
 
     @POST
     @Produces({"application/json" })
-    @Override
     public String playNewTetris() {
         final TetrisId tetrisId = playingTetrisService.newTetris();
         return tetrisId.toString();
@@ -87,7 +86,6 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
     @POST
     @Path("/{tetrisId}/move")
     @Consumes({"application/json" })
-    @Override
     public void movePiece(@PathParam("tetrisId")
     String tetrisId, MoveDto move) {
         playingTetrisService.movePiece(new TetrisId(tetrisId), Direction.valueOf(move.getDirection()));
@@ -96,7 +94,6 @@ public class RestPlayingTetrisFacade implements PlayingTetrisFacade {
     @POST
     @Path("/{tetrisId}/rotate")
     @Consumes({"application/json" })
-    @Override
     public void rotatePiece(@PathParam("tetrisId")
     String tetrisId, RotateDto rotate) {
         playingTetrisService.rotatePiece(new TetrisId(tetrisId), Direction.valueOf(rotate.getDirection()));

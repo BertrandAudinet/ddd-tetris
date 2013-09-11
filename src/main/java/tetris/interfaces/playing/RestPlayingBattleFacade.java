@@ -43,7 +43,7 @@ public class RestPlayingBattleFacade {
         final Battle battle = battleRepository.find(battleId);
 
         final BattleDto battleDto = new BattleDto();
-        battleDto.setBattleId(battle.getId().toString());
+        battleDto.setBattleId(battle.getBattleId().toString());
 
         battleDto.setStatus(battle.getStatus().name());
 

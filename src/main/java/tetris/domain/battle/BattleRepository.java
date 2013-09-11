@@ -2,6 +2,8 @@ package tetris.domain.battle;
 
 import java.util.List;
 
+import tetris.domain.game.TetrisId;
+
 public interface BattleRepository {
     void store(Battle battle);
 
@@ -10,4 +12,6 @@ public interface BattleRepository {
     public BattleId nextBattleId();
 
     List<Battle> lookupBattle(BattleStatus status);
+
+    Battle lookupBattleOfTetrisId(TetrisId tetrisId);
 }

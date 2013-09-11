@@ -3,6 +3,7 @@ package tetris.domain.game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Board {
     public static int DEFAULT_WIDTH = 10;
@@ -225,5 +226,28 @@ public class Board {
             }
         }
         return count;
+    }
+
+    public Board insertPenaltyLine(int lineCount) {
+        final Block[] newGrid = Arrays.copyOf(grid, height * width);
+
+        int minIndex = lineCount * width;
+        int maxIndex = height * width;
+        for (int i = minIndex; i < maxIndex; i++) {
+            if (newGrid[i] != null) {
+                Block block = newGrid[i].moveUp();
+                int index = block.getY() * width + block.getX();
+                newGrid[index] = block;
+            }
+        }
+        for (int y = height - lineCount; y < height; y++) {
+            for (int x = 0; x < width - 1; x++) {
+                int index = y * width + x;
+                newGrid[index] = new Block(x, y, Tetromino.I);
+            }
+            int blankIndex = y * width + new Random().nextInt(width - 1);
+            newGrid[blankIndex] = null;
+        }
+        return new Board(width, height, newGrid);
     }
 }

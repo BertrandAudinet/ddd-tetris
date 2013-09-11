@@ -17,6 +17,10 @@ public class Block {
         return new Block(x, y + 1, tetromino);
     }
 
+    public Block moveUp() {
+        return new Block(x, y - 1, tetromino);
+    }
+
     public Block moveLeft() {
         return new Block(x - 1, y, tetromino);
     }

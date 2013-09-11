@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 
 import tetris.domain.battle.Battle;
 import tetris.domain.battle.BattleId;
+import tetris.domain.battle.BattleJoinService;
 import tetris.domain.battle.BattleRepository;
 import tetris.domain.battle.BattleStatus;
+import tetris.domain.battle.event.BattleListener;
+import tetris.domain.battle.event.BattlePenaltyLineAdded;
+import tetris.domain.battle.event.BattleTetrisJoined;
 import tetris.domain.game.Game;
 import tetris.domain.game.GameRepository;
 import tetris.domain.game.TetrisId;
@@ -25,22 +29,33 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private BattleJoinService battleJoinService;
+
     @Override
     public BattleId joinBattle(TetrisId tetrisId) {
-        final List<Battle> awaitedBattles = battleRepository.lookupBattle(BattleStatus.AWAITED);
-        Battle battle;
-        if (awaitedBattles.isEmpty()) {
-            battle = new Battle(battleRepository.nextBattleId());
-        } else {
-            battle = awaitedBattles.get(0);
-        }
+        final Game tetris = gameRepository.find(tetrisId);
 
-        battle.addOpponent(tetrisId);
+        final Battle battle = battleJoinService.joinBattle(tetris);
+        battle.addBattleListener(new BattleListener() {
+
+            @Override
+            public void tetrisJoined(BattleTetrisJoined event) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void penaltyLineAdded(BattlePenaltyLineAdded event) {
+                // TODO Auto-generated method stub
+
+            }
+        });
 
         battleRepository.store(battle);
-        log.info("Tetris id " + tetrisId + " joins a battle with battle id " + battle.getId());
+        log.info("Tetris id " + tetrisId + " joins a battle with battle id " + battle.getBattleId());
 
-        return battle.getId();
+        return battle.getBattleId();
     }
 
     @Override
@@ -66,8 +81,43 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
         final List<Battle> lookupBattle = battleRepository.lookupBattle(BattleStatus.AWAITED);
         List<BattleId> awaitedBattles = new ArrayList<BattleId>();
         for (Battle battle : lookupBattle) {
-            awaitedBattles.add(battle.getId());
+            awaitedBattles.add(battle.getBattleId());
         }
         return awaitedBattles;
+    }
+
+    @Override
+    public void addPenaltyLine(BattleId battleId, TetrisId tetrisId, int lineCount) {
+        final Battle battle = battleRepository.find(battleId);
+        final BattleListener listener = new BattleListener() {
+
+            @Override
+            public void tetrisJoined(BattleTetrisJoined event) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void penaltyLineAdded(BattlePenaltyLineAdded event) {
+                final Game tetris = gameRepository.find(event.getTetrisId());
+                tetris.addPenaltyLine(event.getLineCount());
+                gameRepository.store(tetris);
+            }
+        };
+        battle.addBattleListener(listener);
+
+        battle.addPenaltyLine(tetrisId, lineCount);
+
+        battle.removeBattleListener(listener);
+        battleRepository.store(battle);
+    }
+
+    @Override
+    public BattleId getBattle(TetrisId tetrisId) {
+        final Battle battle = battleRepository.lookupBattleOfTetrisId(tetrisId);
+        if (battle == null) {
+            return null;
+        }
+        return battle.getBattleId();
     }
 }

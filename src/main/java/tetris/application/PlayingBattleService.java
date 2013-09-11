@@ -12,4 +12,7 @@ public interface PlayingBattleService {
 
     List<BattleId> listAwaitedBattles();
 
+    void addPenaltyLine(BattleId battleId, TetrisId tetrisId, int lineCount);
+
+    BattleId getBattle(TetrisId tetrisId);
 }

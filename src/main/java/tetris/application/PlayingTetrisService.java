@@ -15,4 +15,6 @@ public interface PlayingTetrisService {
 
     void startTetris(TetrisId tetrisId);
 
+    void runTetris(TetrisId tetrisId);
+
 }

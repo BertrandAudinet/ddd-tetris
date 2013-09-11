@@ -1,6 +1,14 @@
 package tetris.domain.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import tetris.domain.game.event.TetrisLineCompleted;
+import tetris.domain.game.event.TetrisListener;
+
 public class Game {
+    private transient List<TetrisListener> listeners = new ArrayList<TetrisListener>();
+
     private Board board;
 
     private Shape piece;
@@ -52,6 +60,7 @@ public class Game {
             this.piece = null;
             // remove completed lines
             score = score.addLines(board.getCompletedLinesNumber());
+            fireLineCompleted(board.getCompletedLinesNumber());
             this.board = board.removeCompletedLines();
         } else {
             this.piece = movePiece;
@@ -98,6 +107,14 @@ public class Game {
         }
     }
 
+    public void addTetrisListener(TetrisListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeTetrisListener(TetrisListener listener) {
+        listeners.remove(listener);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -121,6 +138,20 @@ public class Game {
         } else if (!tetrisId.equals(other.tetrisId))
             return false;
         return true;
+    }
+
+    protected void fireLineCompleted(int lineCount) {
+        if (lineCount > 0) {
+            for (TetrisListener listener : listeners) {
+                TetrisLineCompleted event = new TetrisLineCompleted(tetrisId, lineCount);
+                listener.lineCompleted(event);
+            }
+        }
+    }
+
+    public void addPenaltyLine(int lineCount) {
+        this.board = board.insertPenaltyLine(lineCount);
+
     }
 
 }
