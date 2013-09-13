@@ -1,5 +1,6 @@
 package tetris.application;
 
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -11,6 +12,10 @@ import tetris.domain.game.Game;
 import tetris.domain.game.GameRepository;
 import tetris.domain.game.TetrisId;
 import tetris.domain.game.Tetromino;
+import tetris.domain.game.event.TetrisAdapter;
+import tetris.domain.game.event.TetrisEvent;
+import tetris.domain.game.event.TetrisEventQueue;
+import tetris.domain.game.event.TetrisEventRepository;
 import tetris.domain.game.event.TetrisLineCompleted;
 import tetris.domain.game.event.TetrisListener;
 
@@ -23,6 +28,9 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
 
     @Autowired
     private ApplicationEvents applicationEvents;
+
+    @Autowired
+    private TetrisEventRepository tetrisEventRepository;
 
     @Override
     public TetrisId newTetris() {
@@ -39,9 +47,15 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     public void movePiece(TetrisId tetrisId, Direction direction) {
         final Game game = gameRepository.find(tetrisId);
 
+        final TetrisEventQueue eventQueue = new TetrisEventQueue();
+        game.addTetrisListener(eventQueue);
+
         game.movePiece(direction);
 
+        game.removeTetrisListener(eventQueue);
+
         gameRepository.store(game);
+        tetrisEventRepository.store(eventQueue);
         log.info("Moved piece for tetris " + tetrisId + " to " + direction);
     }
 
@@ -49,9 +63,15 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     public void rotatePiece(TetrisId tetrisId, Direction direction) {
         final Game game = gameRepository.find(tetrisId);
 
+        final TetrisEventQueue eventQueue = new TetrisEventQueue();
+        game.addTetrisListener(eventQueue);
+
         game.rotatePiece(direction);
 
+        game.removeTetrisListener(eventQueue);
+
         gameRepository.store(game);
+        tetrisEventRepository.store(eventQueue);
         log.info("Rotated piece for tetris " + tetrisId + " to " + direction);
     }
 
@@ -69,16 +89,7 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     public void startTetris(TetrisId tetrisId) {
         final Game game = gameRepository.find(tetrisId);
 
-        game.start();
-
-        gameRepository.store(game);
-        log.info("Started tetris " + tetrisId);
-    }
-
-    @Override
-    public void runTetris(TetrisId tetrisId) {
-        final Game game = gameRepository.find(tetrisId);
-        final TetrisListener listener = new TetrisListener() {
+        final TetrisListener listener = new TetrisAdapter() {
 
             @Override
             public void lineCompleted(TetrisLineCompleted event) {
@@ -86,6 +97,35 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
             }
         };
         game.addTetrisListener(listener);
+
+        final TetrisEventQueue eventQueue = new TetrisEventQueue();
+        game.addTetrisListener(eventQueue);
+
+        game.start();
+
+        game.removeTetrisListener(listener);
+        game.removeTetrisListener(eventQueue);
+
+        gameRepository.store(game);
+        tetrisEventRepository.store(eventQueue);
+        log.info("Started tetris " + tetrisId);
+    }
+
+    @Override
+    public void runTetris(TetrisId tetrisId) {
+        final Game game = gameRepository.find(tetrisId);
+
+        final TetrisListener listener = new TetrisAdapter() {
+
+            @Override
+            public void lineCompleted(TetrisLineCompleted event) {
+                applicationEvents.dispatchTetrisEvent(event);
+            }
+        };
+        game.addTetrisListener(listener);
+
+        final TetrisEventQueue eventQueue = new TetrisEventQueue();
+        game.addTetrisListener(eventQueue);
 
         if (game.getPiece() == null) {
             game.dropNewPiece(nextTetromino());
@@ -96,7 +136,10 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
         }
 
         game.removeTetrisListener(listener);
+        game.removeTetrisListener(eventQueue);
+
         gameRepository.store(game);
+        tetrisEventRepository.store(eventQueue);
         log.info("Fallen piece for tetris " + game.getTetrisId());
 
     }
@@ -104,5 +147,10 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     Tetromino nextTetromino() {
         final int nextInt = new Random().nextInt(Tetromino.values().length - 1);
         return Tetromino.values()[nextInt];
+    }
+
+    @Override
+    public List<TetrisEvent> getEvents(TetrisId tetrisId, long lastEventId) {
+        return tetrisEventRepository.findNextTetrisEvents(tetrisId, lastEventId);
     }
 }

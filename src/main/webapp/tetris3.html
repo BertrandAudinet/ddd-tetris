@@ -1,0 +1,697 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- 
+<meta http-equiv="refresh" content="1">
+ -->
+<title>Tetris Battle</title>
+
+<script type="text/javascript" src="javascript/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="javascript/jquery.timer.js"></script>
+<script type="text/javascript" src="javascript/tetris.js"></script>
+<script type="text/javascript" src="javascript/JQueryTetrisView.js"></script>
+<script type="text/javascript" src="javascript/RestTetrisModel.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(
+		function($) {
+			var tetrisView = new JQueryTetrisView($("#page-body"));
+			var tetrisModel = new RestTetrisModel();
+			var tetrisPresenter = new TetrisPresenter(tetrisView, tetrisModel);
+			tetrisPresenter.init();
+		});
+	</script>
+
+
+<style type="text/css">
+.square {
+	background-color: black;
+	border-color: gray;
+	border-style: solid;
+	border-width: thin;
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+}
+
+.breaker {
+	display: block;
+	clear: both;
+}
+
+.IShape {
+	background-color: aqua;
+}
+
+.OShape {
+	background-color: yellow;
+}
+
+.TShape {
+	background-color: fuchsia;
+}
+
+.JShape {
+	background-color: blue;
+}
+
+.LShape {
+	background-color: orange;
+}
+
+.SShape {
+	background-color: green;
+}
+
+.ZShape {
+	background-color: red;
+}
+
+.PShape {
+	background-color: gray;
+}
+
+.board {
+	position: absolute;
+	left: 50px;
+	top: 50px;
+	padding: 46px;
+}
+
+.board table {
+	border-collapse: collapse;
+}
+
+.board td {
+	height: 20px;
+	width: 20px;
+	border-color: gray;
+	border-style: solid;
+	border-width: thin;
+}
+
+.shape {
+	position: absolute;
+	top: 46px;
+	left: 46px;
+	transform-origin: 37.5% 37.5%;
+}
+
+.shape:hover {
+	transform: rotate(90deg);
+}
+
+#IShape {
+	top: 46px;
+	left: 46px;
+}
+
+#TShape {
+	top: 46px;
+	left: 184px;
+}
+
+#LShape {
+	top: 161px;
+	left: 46px;
+}
+
+#JShape {
+	top: 161px;
+	left: 184px;
+}
+
+#ZShape {
+	top: 276px;
+	left: 46px;
+	transform-origin: 50% 50%;
+}
+
+#SShape {
+	top: 276px;
+	left: 184px;
+	transform-origin: 50% 50%;
+}
+
+#OShape {
+	top: 391px;
+	left: 115px;
+}
+
+.shape table {
+	border-collapse: collapse;
+}
+
+div.shape td {
+	height: 20px;
+	width: 20px;
+	border-color: transparent;
+	border-style: solid;
+	border-width: thin;
+	text-align: center;
+}
+
+#gameover {
+	color: red;
+	font-style: oblique;
+	font-weight: bold;
+}
+
+#youlose {
+	position: absolute;
+	left: 96px;
+	top: 50px;
+	color: red;
+	font-style: italic;
+	font-weight: bold;
+	font-size: x-large;
+	color: red;
+	top: 50px;
+}
+
+#battle {
+	position: absolute;
+	left: 400px;
+	top: 50px;
+}
+</style>
+</head>
+<body>
+	<div id="page-body">
+		<div class="titre">
+			TETRIS <span id="tetris_id"></span>
+		</div>
+		<div class="result">
+			<a href="#" class="pushStart">PUSH START</a> <a href="#"
+				id="join_battle">JOIN BATTLE</a>
+		</div>
+		<div class="board">
+			<div class="grid">
+				<table>
+					<!-- 1 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 2 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 3 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 4 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 5 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 6 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 7 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 8 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 9 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 10 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 11 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 12 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 13 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 14 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 15 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 16 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 17 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 18 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 19 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 20 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 21 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<!-- 22 -->
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+				</table>
+			</div>
+			<div id="IShape" class="shape">
+				<table>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="IShape"></td>
+						<td class="IShape"></td>
+						<td class="IShape"></td>
+						<td class="IShape"></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="TShape" class="shape">
+				<table>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="TShape"></td>
+						<td class="TShape"></td>
+						<td class="TShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="TShape"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="LShape" class="shape rotate1">
+				<table>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="LShape"></td>
+						<td class="LShape"></td>
+						<td class="LShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="LShape"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="JShape" class="shape">
+				<table>
+					<tr>
+						<td class="JShape"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="JShape"></td>
+						<td class="JShape"></td>
+						<td class="JShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="ZShape" class="shape">
+				<table>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="ZShape"></td>
+						<td class="ZShape"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="ZShape"></td>
+						<td class="ZShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="SShape" class="shape">
+				<table>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="SShape"></td>
+						<td class="SShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="SShape"></td>
+						<td class="SShape"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="OShape" class="shape">
+				<table>
+					<tr>
+						<td></td>
+						<td class="OShape"></td>
+						<td class="OShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="OShape"></td>
+						<td class="OShape"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<div id="youlose">You lose!</div>
+			<div>
+				<div>
+					Level : <span id="score_level"></span>
+				</div>
+				<div>
+					Lines : <span id="score_lines"></span>
+				</div>
+				<div>
+					Score : <span id="score_points"></span>
+				</div>
+			</div>
+		</div>
+		<div id="battle">
+			<div class="titre">
+				BATTLE <span id="battle_id"></span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

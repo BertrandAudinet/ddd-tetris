@@ -3,8 +3,12 @@ package tetris.domain.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import tetris.domain.game.event.TetrisGameStarted;
 import tetris.domain.game.event.TetrisLineCompleted;
 import tetris.domain.game.event.TetrisListener;
+import tetris.domain.game.event.TetrisPieceDropped;
+import tetris.domain.game.event.TetrisPieceMoved;
+import tetris.domain.game.event.TetrisPieceRotated;
 
 public class Game {
     private transient List<TetrisListener> listeners = new ArrayList<TetrisListener>();
@@ -35,6 +39,7 @@ public class Game {
         final Shape movedShape = piece.move(direction);
         if (!board.hasCollision(movedShape)) {
             this.piece = movedShape;
+            firePieceMoved(movedShape);
         }
     }
 
@@ -42,6 +47,7 @@ public class Game {
         final Shape rotatedShape = piece.rotate(direction);
         if (!board.hasCollision(rotatedShape)) {
             this.piece = rotatedShape;
+            firePieceRotated(rotatedShape);
         }
     }
 
@@ -49,6 +55,7 @@ public class Game {
         final Shape movedShape = piece.moveDown();
         if (!board.hasCollision(movedShape)) {
             this.piece = movedShape;
+            firePieceDropped(piece);
         }
 
     }
@@ -93,6 +100,7 @@ public class Game {
 
     public void start() {
         this.started = true;
+        fireGameStarted(true);
     }
 
     public void stop() {
@@ -100,11 +108,19 @@ public class Game {
     }
 
     public void dropNewPiece(Tetromino tetromino) {
-        this.piece = new Shape(3, 0, tetromino);
-        if (board.hasCollision(piece)) {
+        final Shape newPiece = new Shape(3, 0, tetromino);
+        if (board.hasCollision(newPiece)) {
             this.lost = true;
             this.started = false;
+        } else {
+            this.piece = newPiece;
+            firePieceDropped(newPiece);
         }
+    }
+
+    public void addPenaltyLine(int lineCount) {
+        this.board = board.insertPenaltyLine(lineCount);
+
     }
 
     public void addTetrisListener(TetrisListener listener) {
@@ -149,9 +165,32 @@ public class Game {
         }
     }
 
-    public void addPenaltyLine(int lineCount) {
-        this.board = board.insertPenaltyLine(lineCount);
+    protected void fireGameStarted(boolean started) {
+        for (TetrisListener listener : listeners) {
+            TetrisGameStarted event = new TetrisGameStarted(tetrisId, started);
+            listener.gameStarted(event);
+        }
+    }
 
+    protected void firePieceDropped(Shape piece) {
+        for (TetrisListener listener : listeners) {
+            TetrisPieceDropped event = new TetrisPieceDropped(tetrisId, piece);
+            listener.pieceDropped(event);
+        }
+    }
+
+    protected void firePieceMoved(Shape piece) {
+        for (TetrisListener listener : listeners) {
+            TetrisPieceMoved event = new TetrisPieceMoved(tetrisId, piece);
+            listener.pieceMoved(event);
+        }
+    }
+
+    protected void firePieceRotated(Shape piece) {
+        for (TetrisListener listener : listeners) {
+            TetrisPieceRotated event = new TetrisPieceRotated(tetrisId, piece);
+            listener.pieceRotated(event);
+        }
     }
 
 }

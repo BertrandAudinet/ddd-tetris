@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>tests with QUnit</title>
+<link rel="stylesheet" href="./lib/qunit-1.12.0/qunit-1.12.0.css">
+
+<!-- source lib -->
+<script type="text/javascript"
+	src="/ddd-tetris/javascript/jquery-1.10.2.js"></script>
+
+<!-- javascript sources -->
+<script src="/ddd-tetris/javascript/tetris.js"></script>
+<script src="/ddd-tetris/javascript/JQueryTetrisView.js"></script>
+<script src="/ddd-tetris/javascript/RestTetrisModel.js"></script>
+
+<!-- test lib -->
+<script src="./lib/qunit-1.12.0/qunit-1.12.0.js"></script>
+
+<!-- javascript tests -->
+<script src="./javascript/JQueryTetrisViewTest.js"></script>
+<script src="./javascript/TetrisPresenterTest.js"></script>
+<script src="./javascript/RestTetrisModelTest.js"></script>
+
+<script type="text/javascript">
+</script>
+
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture">
+		<div class="tetris">
+			<a href="#" class="pushStart">PUSH START</a>
+			<div class="board">
+				<table>
+					<!-- 1 -->
+					<tr>
+						<td class="IShape"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

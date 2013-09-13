@@ -1,11 +1,15 @@
 package tetris.interfaces.playing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +22,7 @@ import tetris.domain.game.GameRepository;
 import tetris.domain.game.Score;
 import tetris.domain.game.Shape;
 import tetris.domain.game.TetrisId;
+import tetris.domain.game.event.TetrisEvent;
 
 @Path("/playing")
 public class RestPlayingTetrisFacade {
@@ -56,17 +61,7 @@ public class RestPlayingTetrisFacade {
         final Shape piece = game.getPiece();
         PieceDto pieceDto = null;
         if (piece != null) {
-            pieceDto = new PieceDto();
-            pieceDto.setRotation(piece.getRotation());
-            pieceDto.setTetromino(piece.getTetromino().name());
-            pieceDto.setX(piece.getX());
-            pieceDto.setY(piece.getY());
-
-            String[][] pieceGrid = new String[Shape.NB_BLOCKS][Shape.NB_BLOCKS];
-            for (Block block : piece.getBlocks()) {
-                pieceGrid[block.getY() - piece.getY()][block.getX() - piece.getX()] = block.getTetromino().name();
-            }
-            pieceDto.setGrid(pieceGrid);
+            pieceDto = new PieceDto(piece);
         }
 
         ScoreDto scoreDto = new ScoreDto();
@@ -112,5 +107,20 @@ public class RestPlayingTetrisFacade {
     public void start(@PathParam("tetrisId")
     String tetrisId) {
         playingTetrisService.startTetris(new TetrisId(tetrisId));
+    }
+
+    @GET
+    @Path("/{tetrisId}/events")
+    @Produces({"application/json" })
+    public List<TetrisEventDto> getEvents(@PathParam("tetrisId")
+    String tetrisId, @QueryParam("lastEventId")
+    long lastEventId) {
+        final List<TetrisEventDto> tetrisEventsDto = new ArrayList<TetrisEventDto>();
+        final List<TetrisEvent> events = playingTetrisService.getEvents(new TetrisId(tetrisId), lastEventId);
+        for (TetrisEvent event : events) {
+            final TetrisEventDto tetrisEventDto = TetrisEventDto.map(event);
+            tetrisEventsDto.add(tetrisEventDto);
+        }
+        return tetrisEventsDto;
     }
 }

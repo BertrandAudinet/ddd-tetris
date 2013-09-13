@@ -1,5 +1,8 @@
 package tetris.interfaces.playing;
 
+import tetris.domain.game.Block;
+import tetris.domain.game.Shape;
+
 public class PieceDto {
     private String tetromino;
 
@@ -10,6 +13,22 @@ public class PieceDto {
     private int rotation;
 
     private String[][] grid;
+
+    public PieceDto() {
+    }
+
+    public PieceDto(Shape piece) {
+        this.setRotation(piece.getRotation());
+        this.setTetromino(piece.getTetromino().name());
+        this.setX(piece.getX());
+        this.setY(piece.getY());
+
+        String[][] pieceGrid = new String[Shape.NB_BLOCKS][Shape.NB_BLOCKS];
+        for (Block block : piece.getBlocks()) {
+            pieceGrid[block.getY() - piece.getY()][block.getX() - piece.getX()] = block.getTetromino().name();
+        }
+        this.setGrid(pieceGrid);
+    }
 
     public String getTetromino() {
         return tetromino;

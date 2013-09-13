@@ -48,6 +48,12 @@
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<wtpversion>2.0</wtpversion>
+					<additionalProjectnatures>
+								<projectnature>org.eclipse.wst.jsdt.core.jsNature</projectnature>
+							</additionalProjectnatures>
+							<additionalBuildcommands>
+								<buildcommand>org.eclipse.wst.jsdt.core.javascriptValidator</buildcommand>
+							</additionalBuildcommands>
 				</configuration>
 			</plugin>
 		</plugins>
