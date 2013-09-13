@@ -29,7 +29,6 @@ RestTetrisModel.prototype.start = function() {
 	$.get('/ddd-tetris/ws/playing/'+model.tetrisId+'/start')
 	.done(function(data, textStatus, jqXHR) {
 		console.log("start game for tetris id="+model.tetrisId);
-		model.getEvent(model.tetrisId, 0);
 	})
 	.fail(function(jqXHR, textStatus, errorThrown) { 
 		alert('error'); 

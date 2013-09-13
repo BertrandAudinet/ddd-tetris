@@ -50,8 +50,10 @@ TetrisModel.prototype.getEvent = function(tetrisId, lastEventId) {
 
 /**
  * @constructor
- * @param {TetrisView} view
- * @Param {TetrisModel} model
+ * @param {TetrisView}
+ *            view
+ * @Param {TetrisModel}
+ *            model
  */
 function TetrisPresenter(view, model) {
 	this.view = view;
@@ -81,6 +83,13 @@ TetrisPresenter.prototype.pushStart = function() {
 	this.view.clearGrid();
 	this.view.hideShape();
 	this.model.start();
+	var presenter = this;
+	var timer = $.timer(function() {
+		presenter.model.getEvent(presenter.tetrisId, presenter.lastEventId);
+		timer.once(500);
+	}, 500, false);
+	timer.once(500);
+
 };
 
 TetrisPresenter.prototype.onMoveLeft = function() {
@@ -99,7 +108,7 @@ TetrisPresenter.prototype.onTetrisEvent = function(event) {
 	if (type == "TETRIS_STARTED") {
 		this.onTetrisStarted(event);
 	} else {
-		console.log("Event [type="+event.type+"]");
+		console.log("Event [type=" + event.type + "]");
 	}
 };
 
