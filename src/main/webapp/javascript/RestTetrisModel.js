@@ -11,7 +11,7 @@ RestTetrisModel.prototype.playNewTetris = function() {
 		$.ajax({
 			type : "POST",
 			async : false,
-			url : '/ddd-tetris/ws/playing',
+			url : './ws/playing',
 			contentType : 'application/json',
 			data : '',
 			success : function(data, textStatus, jqXHR) {
@@ -26,7 +26,7 @@ RestTetrisModel.prototype.playNewTetris = function() {
 
 RestTetrisModel.prototype.start = function() {
 	var model = this;
-	$.get('/ddd-tetris/ws/playing/'+model.tetrisId+'/start')
+	$.get('./ws/playing/'+model.tetrisId+'/start')
 	.done(function(data, textStatus, jqXHR) {
 		console.log("start game for tetris id="+model.tetrisId);
 	})
@@ -38,7 +38,7 @@ RestTetrisModel.prototype.start = function() {
 RestTetrisModel.prototype.getEvent = function(tetrisId, lastEventId) {
 	var model = this;
 	jQuery(function($) {
-		$.get('/ddd-tetris/ws/playing/' + tetrisId + "/events?lastEventId="+lastEventId).done(
+		$.get('./ws/playing/' + tetrisId + "/events?lastEventId="+lastEventId).done(
 				function(data, textStatus, jqXHR) {
 					var events = data.tetrisEvent;
 					//console.log("getEvents done : count=");
@@ -60,10 +60,11 @@ RestTetrisModel.prototype.addTetrisEventHandler = function(handler) {
 };
 
 RestTetrisModel.prototype.rotatePiece = function(direction) {
+	var model = this;
 	jQuery(function($) {
 		$.ajax({
 			type : "POST",
-			url : '/ddd-tetris/ws/playing/' + this.tetrisId + '/rotate',
+			url : './ws/playing/' + model.tetrisId + '/rotate',
 			contentType : 'application/json',
 			data : '{ "rotate" : { "direction": ' + direction + ' }}',
 			success : function() {
@@ -79,7 +80,7 @@ RestTetrisModel.prototype.movePiece = function(direction) {
 	jQuery(function($) {
 		$.ajax({
 			type : "POST",
-			url : '/ddd-tetris/ws/playing/' + model.tetrisId + '/move',
+			url : './ws/playing/' + model.tetrisId + '/move',
 			contentType : 'application/json',
 			data : '{ "move" : { "direction": ' + direction + '}}',
 			success : function() {
@@ -91,10 +92,11 @@ RestTetrisModel.prototype.movePiece = function(direction) {
 };
 
 RestTetrisModel.prototype.dropPiece = function() {
+	var model = this;
 	jQuery(function($) {
 		$.ajax({
 			type : "POST",
-			url : '/ddd-tetris/ws/playing/' + this.tetrisId + '/drop',
+			url : './ws/playing/' + model.tetrisId + '/drop',
 			contentType : 'application/json',
 			success : function() {
 				console.log("drop piece for tetris id="+model.tetrisId);

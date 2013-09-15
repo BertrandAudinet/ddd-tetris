@@ -39,6 +39,25 @@ JQueryTetrisView.prototype.addMoveRightHandler = function(moveRightHandler) {
 	});
 };
 
+
+JQueryTetrisView.prototype.addDropPieceHandler = function(dropPieceHandler) {
+	jQuery(document).on("keydown", function(event) {
+		if (event.which == 40) {
+			dropPieceHandler();
+			event.stopPropagation();
+		}
+	});
+};
+
+JQueryTetrisView.prototype.addRotatePieceHandler = function(rotatePieceHandler) {
+	jQuery(document).on("keydown", function(event) {
+		if (event.which == 38) {
+			rotatePieceHandler();
+			event.stopPropagation();
+		}
+	});
+};
+
 JQueryTetrisView.prototype.clearGrid = function() {
 	this.grid.find("td").removeClass(
 			'IShape OShape TShape JShape lShape SShape ZShape PShape');
@@ -49,9 +68,26 @@ JQueryTetrisView.prototype.hideShape = function() {
 };
 
 JQueryTetrisView.prototype.displayStart = function() {
-	alert("Tetris started");
+	console.log("JQueryTetrisView.displayStart()");
 };
 
 JQueryTetrisView.prototype.displayPause = function() {
-	alert("Tetris paused");
+	console.log("JQueryTetrisView.displayPause()");
+};
+
+JQueryTetrisView.prototype.displayPiece = function(piece) {
+	console.log("JQueryTetrisView.displayPiece()");
+	
+	var currentPiece = this.shapes.parent().find('#' + piece.tetromino + 'Shape');
+	// descente classique
+
+	var y = piece.y * 23 + 46;
+	var x = piece.x * 23 + 46;
+	var rotation = piece.rotation * (90);
+	currentPiece.css({
+		left : x + 'px',
+		top : y + 'px',
+		transform : 'rotate(' + rotation + 'deg)'
+	});
+	currentPiece.show();
 };
