@@ -1,5 +1,8 @@
 package tetris.interfaces.playing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tetris.domain.game.Block;
 import tetris.domain.game.Shape;
 
@@ -13,6 +16,8 @@ public class PieceDto {
     private int rotation;
 
     private String[][] grid;
+
+    private List<BlockDto> blocks;
 
     public PieceDto() {
     }
@@ -28,6 +33,11 @@ public class PieceDto {
             pieceGrid[block.getY() - piece.getY()][block.getX() - piece.getX()] = block.getTetromino().name();
         }
         this.setGrid(pieceGrid);
+
+        blocks = new ArrayList<BlockDto>(piece.getBlocks().size());
+        for (Block block : piece.getBlocks()) {
+            blocks.add(new BlockDto(block));
+        }
     }
 
     public String getTetromino() {
@@ -68,5 +78,13 @@ public class PieceDto {
 
     public void setGrid(String[][] grid) {
         this.grid = grid;
+    }
+
+    public List<BlockDto> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<BlockDto> blocks) {
+        this.blocks = blocks;
     }
 }

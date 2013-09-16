@@ -16,7 +16,7 @@ import tetris.domain.game.event.TetrisAdapter;
 import tetris.domain.game.event.TetrisEvent;
 import tetris.domain.game.event.TetrisEventQueue;
 import tetris.domain.game.event.TetrisEventRepository;
-import tetris.domain.game.event.TetrisLineCompleted;
+import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
 
 @Service
@@ -92,7 +92,7 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
         final TetrisListener listener = new TetrisAdapter() {
 
             @Override
-            public void lineCompleted(TetrisLineCompleted event) {
+            public void lineCleared(TetrisLineCleared event) {
                 applicationEvents.dispatchTetrisEvent(event);
             }
         };
@@ -118,7 +118,7 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
         final TetrisListener listener = new TetrisAdapter() {
 
             @Override
-            public void lineCompleted(TetrisLineCompleted event) {
+            public void lineCleared(TetrisLineCleared event) {
                 applicationEvents.dispatchTetrisEvent(event);
             }
         };

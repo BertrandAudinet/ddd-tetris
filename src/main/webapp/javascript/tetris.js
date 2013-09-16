@@ -34,6 +34,9 @@ TetrisView.prototype.displayPause = function() {
 TetrisView.prototype.displayPiece = function() {
 };
 
+TetrisView.prototype.displayBlock = function(x, y, tetromino) {
+};
+
 /**
  * @constructor
  */
@@ -64,6 +67,9 @@ TetrisModel.prototype.dropPiece = function() {
 };
 
 TetrisModel.prototype.getEvent = function(tetrisId, lastEventId) {
+};
+
+TetrisModel.prototype.getBoard = function(tetrisId) {
 };
 
 /**
@@ -146,7 +152,11 @@ TetrisPresenter.prototype.onTetrisEvent = function(event) {
 	} else if (type == "TETRIS_PIECE_ROTATED") {
 		this.movePiece(event);
 	} else if (type == "TETRIS_PIECE_DROPPED") {
-		this.movePiece(event);
+		this.dropPiece(event);
+	} else if (type == "TETRIS_PIECE_LOCKED") {
+		this.loadGrid(event);
+	} else if (type == "TETRIS_SCORE_CHANGED") {
+		this.changeScore(event);
 	} else {
 		console.log("Event [type=" + event.type + "]");
 	}
@@ -160,7 +170,37 @@ TetrisPresenter.prototype.onTetrisStarted = function(event) {
 	}
 };
 
+TetrisPresenter.prototype.dropPiece = function(event) {
+	if (event.newPiece) {
+		var board = this.model.getBoard();
+		this.view.clearGrid();
+		this.view.hideShape();
+		var blocks = board.blocks;
+		if (blocks) {
+			for(var i=0; i < blocks.length; i++){
+				var block = blocks[i];
+				this.view.displayBlock(block.x, block.y, block.tetromino);
+			}
+		}
+	}
+	this.movePiece(event);
+};
+
 TetrisPresenter.prototype.movePiece = function(event) {
 	this.view.hideShape();
 	this.view.displayPiece(event.piece);
+};
+
+TetrisPresenter.prototype.changeScore = function(event) {
+	this.view.displayScore(event.level, event.lines, event.points);
+};
+
+
+TetrisPresenter.prototype.loadGrid = function(event) {
+	var piece = event.piece;
+	var blocks = piece.blocks;
+	for(var i=0; i < blocks.length; i++){
+		var block = blocks[i];
+		this.view.displayBlock(block.x, block.y, block.tetromino);
+	}
 };

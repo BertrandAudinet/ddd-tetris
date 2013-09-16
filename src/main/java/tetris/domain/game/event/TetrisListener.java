@@ -3,7 +3,7 @@ package tetris.domain.game.event;
 import java.util.EventListener;
 
 public interface TetrisListener extends EventListener {
-    void lineCompleted(TetrisLineCompleted event);
+    void lineCleared(TetrisLineCleared event);
 
     void gameStarted(TetrisGameStarted event);
 
@@ -12,4 +12,8 @@ public interface TetrisListener extends EventListener {
     void pieceMoved(TetrisPieceMoved event);
 
     void pieceRotated(TetrisPieceRotated event);
+
+    void pieceLocked(TetrisPieceLocked event);
+
+    void scoreChanged(TetrisScoreChanged event);
 }

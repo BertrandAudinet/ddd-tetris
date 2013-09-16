@@ -1,5 +1,6 @@
 package tetris.interfaces.playing;
 
+import tetris.domain.game.Score;
 
 public class ScoreDto {
     private int level;
@@ -7,6 +8,15 @@ public class ScoreDto {
     private int lines;
 
     private int points;
+
+    public ScoreDto() {
+    }
+
+    public ScoreDto(Score score) {
+        level = score.getLevel();
+        lines = score.getLines();
+        points = score.getPoints();
+    }
 
     public int getLevel() {
         return level;

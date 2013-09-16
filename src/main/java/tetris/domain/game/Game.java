@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tetris.domain.game.event.TetrisGameStarted;
-import tetris.domain.game.event.TetrisLineCompleted;
+import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
 import tetris.domain.game.event.TetrisPieceDropped;
+import tetris.domain.game.event.TetrisPieceLocked;
 import tetris.domain.game.event.TetrisPieceMoved;
 import tetris.domain.game.event.TetrisPieceRotated;
+import tetris.domain.game.event.TetrisScoreChanged;
 
 public class Game {
     private transient List<TetrisListener> listeners = new ArrayList<TetrisListener>();
@@ -55,7 +57,7 @@ public class Game {
         final Shape movedShape = piece.moveDown();
         if (!board.hasCollision(movedShape)) {
             this.piece = movedShape;
-            firePieceDropped(piece);
+            firePieceDropped(piece, false);
         }
 
     }
@@ -63,14 +65,25 @@ public class Game {
     public void fallPiece() {
         final Shape movePiece = piece.moveDown();
         if (board.hasCollision(movePiece)) {
+            firePieceLocked(piece);
             this.board = board.fillShape(piece);
             this.piece = null;
             // remove completed lines
-            score = score.addLines(board.getCompletedLinesNumber());
-            fireLineCompleted(board.getCompletedLinesNumber());
+            final int completedLinesNumber = board.getCompletedLinesNumber();
+            final List<Integer> lineClear = board.getLineClear();
+            for (Integer line : lineClear) {
+                fireLineCleared(line, 1);
+            }
+
+            if (completedLinesNumber > 0) {
+                score = score.addLines(completedLinesNumber);
+                fireScoreChanged(score);
+            }
+
             this.board = board.removeCompletedLines();
         } else {
             this.piece = movePiece;
+            firePieceDropped(piece, false);
         }
     }
 
@@ -114,7 +127,7 @@ public class Game {
             this.started = false;
         } else {
             this.piece = newPiece;
-            firePieceDropped(newPiece);
+            firePieceDropped(newPiece, true);
         }
     }
 
@@ -156,11 +169,11 @@ public class Game {
         return true;
     }
 
-    protected void fireLineCompleted(int lineCount) {
+    protected void fireLineCleared(int line, int lineCount) {
         if (lineCount > 0) {
             for (TetrisListener listener : listeners) {
-                TetrisLineCompleted event = new TetrisLineCompleted(tetrisId, lineCount);
-                listener.lineCompleted(event);
+                TetrisLineCleared event = new TetrisLineCleared(tetrisId, line, lineCount);
+                listener.lineCleared(event);
             }
         }
     }
@@ -172,9 +185,9 @@ public class Game {
         }
     }
 
-    protected void firePieceDropped(Shape piece) {
+    protected void firePieceDropped(Shape piece, boolean newPiece) {
         for (TetrisListener listener : listeners) {
-            TetrisPieceDropped event = new TetrisPieceDropped(tetrisId, piece);
+            TetrisPieceDropped event = new TetrisPieceDropped(tetrisId, piece, newPiece);
             listener.pieceDropped(event);
         }
     }
@@ -191,6 +204,21 @@ public class Game {
             TetrisPieceRotated event = new TetrisPieceRotated(tetrisId, piece);
             listener.pieceRotated(event);
         }
+    }
+
+    protected void firePieceLocked(Shape piece) {
+        for (TetrisListener listener : listeners) {
+            TetrisPieceLocked event = new TetrisPieceLocked(tetrisId, piece);
+            listener.pieceLocked(event);
+        }
+    }
+
+    protected void fireScoreChanged(Score score) {
+        for (TetrisListener listener : listeners) {
+            TetrisScoreChanged event = new TetrisScoreChanged(tetrisId, score);
+            listener.scoreChanged(event);
+        }
+
     }
 
 }

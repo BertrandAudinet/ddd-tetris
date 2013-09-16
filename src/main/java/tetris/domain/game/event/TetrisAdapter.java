@@ -3,7 +3,7 @@ package tetris.domain.game.event;
 public class TetrisAdapter implements TetrisListener {
 
     @Override
-    public void lineCompleted(TetrisLineCompleted event) {
+    public void lineCleared(TetrisLineCleared event) {
     }
 
     @Override
@@ -20,6 +20,14 @@ public class TetrisAdapter implements TetrisListener {
 
     @Override
     public void pieceRotated(TetrisPieceRotated event) {
+    }
+
+    @Override
+    public void pieceLocked(TetrisPieceLocked event) {
+    }
+
+    @Override
+    public void scoreChanged(TetrisScoreChanged event) {
     }
 
 }

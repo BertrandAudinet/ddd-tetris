@@ -40,7 +40,7 @@ public class TetrisEventQueue implements TetrisListener {
     }
 
     @Override
-    public void lineCompleted(TetrisLineCompleted event) {
+    public void lineCleared(TetrisLineCleared event) {
         push(event);
     }
 
@@ -61,6 +61,16 @@ public class TetrisEventQueue implements TetrisListener {
 
     @Override
     public void pieceRotated(TetrisPieceRotated event) {
+        push(event);
+    }
+
+    @Override
+    public void pieceLocked(TetrisPieceLocked event) {
+        push(event);
+    }
+
+    @Override
+    public void scoreChanged(TetrisScoreChanged event) {
         push(event);
     }
 }

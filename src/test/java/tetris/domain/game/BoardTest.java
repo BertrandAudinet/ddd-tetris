@@ -109,11 +109,13 @@ public class BoardTest {
     @Test
     public void testRemoveCompletedLines_2LastLineCompleted_ReturnsEmptyBoard() {
         final int lastLine = height - 1;
-        final Board board = Board.emptyBoard(width, height).fillLine(lastLine).fillLine(lastLine - 1);
+        final Board board =
+                        Board.emptyBoard(width, height).fillLine(lastLine).fillLine(lastLine - 1)
+                                        .fillBlock(new Block(3, lastLine - 2, Tetromino.I));
 
         Board actual = board.removeCompletedLines();
 
-        Board expected = Board.emptyBoard(width, height);
+        Board expected = Board.emptyBoard(width, height).fillBlock(new Block(3, lastLine, Tetromino.I));;
         Assert.assertEquals(expected, actual);
     }
 

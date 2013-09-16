@@ -1,0 +1,195 @@
+.square {
+	background-color: black;
+	border-color: gray;
+	border-style: solid;
+	border-width: thin;
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+}
+
+.breaker {
+	display: block;
+	clear: both;
+}
+
+.IShape {
+	background-color: aqua;
+}
+
+.OShape {
+	background-color: yellow;
+}
+
+.TShape {
+	background-color: fuchsia;
+}
+
+.JShape {
+	background-color: blue;
+}
+
+.LShape {
+	background-color: orange;
+}
+
+.SShape {
+	background-color: green;
+}
+
+.ZShape {
+	background-color: red;
+}
+
+.PShape {
+	background-color: gray;
+}
+
+.board {
+	position: absolute;
+	left: 50px;
+	top: 50px;
+	padding: 46px;
+}
+
+.board table {
+	border-collapse: collapse;
+}
+
+.board td {
+	height: 20px;
+	width: 20px;
+	border-color: gray;
+	border-style: solid;
+	border-width: thin;
+}
+
+.shape {
+	position: absolute;
+	top: 46px;
+	left: 46px;
+}
+
+.shape:hover {
+	transform: rotate(90deg);
+	-ms-transform: rotate(90deg); /* IE 9 */
+	-webkit-transform: rotate(90deg); /* Safari and Chrome */
+}
+
+.shape.rotate0 {
+	transform: rotate(0deg);
+	-ms-transform: rotate(0deg); /* IE 9 */
+	-webkit-transform: rotate(0deg); /* Safari and Chrome */
+}
+
+.shape.rotate1 {
+	transform: rotate(90deg);
+	-ms-transform: rotate(90deg); /* IE 9 */
+	-webkit-transform: rotate(90deg); /* Safari and Chrome */
+}
+
+.shape.rotate2 {
+	transform: rotate(180deg);
+	-ms-transform: rotate(180deg); /* IE 9 */
+	-webkit-transform: rotate(180deg); /* Safari and Chrome */
+}
+
+.shape.rotate3 {
+	transform: rotate(270deg);
+	-ms-transform: rotate(270deg); /* IE 9 */
+	-webkit-transform: rotate(270deg); /* Safari and Chrome */
+}
+
+#IShape {
+	top: 46px;
+	left: 46px;
+	transform-origin: 37.5% 37.5%;
+	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
+	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
+}
+
+#TShape {
+	top: 46px;
+	left: 184px;
+	transform-origin: 37.5% 37.5%;
+	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
+	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
+}
+
+#LShape {
+	top: 161px;
+	left: 46px;
+	transform-origin: 37.5% 37.5%;
+	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
+	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
+}
+
+#JShape {
+	top: 161px;
+	left: 184px;
+	transform-origin: 37.5% 37.5%;
+	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
+	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
+}
+
+#ZShape {
+	top: 276px;
+	left: 46px;
+	transform-origin: 50% 50%;
+}
+
+#SShape {
+	top: 276px;
+	left: 184px;
+	transform-origin: 50% 50%;
+}
+
+#OShape {
+	top: 391px;
+	left: 115px;
+}
+
+.shape table {
+	border-collapse: collapse;
+}
+
+div.shape td {
+	height: 20px;
+	width: 20px;
+	border-color: transparent;
+	border-style: solid;
+	border-width: thin;
+	text-align: center;
+}
+
+#gameover {
+	color: red;
+	font-style: oblique;
+	font-weight: bold;
+}
+
+#youlose {
+	position: absolute;
+	left: 96px;
+	top: 50px;
+	color: red;
+	font-style: italic;
+	font-weight: bold;
+	font-size: x-large;
+}
+
+#scoreChanged {
+	position: absolute;
+	left: 96px;
+	top: 150px;	
+	color: yellow;
+	font-style: italic;
+	font-weight: bold;
+	font-size: x-large;
+}
+
+#battle {
+	position: absolute;
+	left: 400px;
+	top: 50px;
+}

@@ -51,6 +51,15 @@ public class ShapeTest {
     }
 
     @Test
+    public void testRotateRight_IShape_Rotated() {
+        final Shape shape = new Shape(1, 1, Tetromino.I);
+
+        final Shape actual = shape.rotateRight();
+
+        Assert.assertEquals(1, actual.getBlocks());
+    }
+
+    @Test
     public void testRotateRight_JShape2Times_Rotated() {
         final Shape shape = new Shape(1, 1, Tetromino.I);
 

@@ -134,7 +134,7 @@ public class Board {
         // fall empty lines
         int offset = 0;
         for (int y = height - 1; y >= 0; y--) {
-            if (completedLines[y]) {
+            while (completedLines[y] && y >= 0) {
                 y--;
                 offset++;
             }
@@ -203,6 +203,31 @@ public class Board {
 
     public Block[] getGrid() {
         return grid;
+    }
+
+    public List<Integer> getLineClear() {
+        boolean[] completedLines = new boolean[height];
+
+        // search completed lines
+        for (int y = 0; y < height; y++) {
+            completedLines[y] = true;
+            for (int x = 0; x < width; x++) {
+                final Block block = getBlockAt(x, y);
+                if (block == null) {
+                    completedLines[y] = false;
+                }
+            }
+        }
+
+        List<Integer> linesClear = new ArrayList<Integer>();
+        int count = 0;
+        for (int i = 0; i < completedLines.length; i++) {
+            if (completedLines[i]) {
+                count++;
+                linesClear.add(i);
+            }
+        }
+        return linesClear;
     }
 
     public int getCompletedLinesNumber() {

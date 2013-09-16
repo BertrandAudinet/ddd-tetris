@@ -8,6 +8,7 @@ function JQueryTetrisView(html) {
 	this.pushStartButton = this.component.find(".pushStart");
 	this.grid = this.component.find(".board .grid");
 	this.shapes = this.component.find(".board .shape");
+	this.scoreChanged = this.component.find(".scoreChanged");
 };
 
 // inherit TetrisView
@@ -83,11 +84,26 @@ JQueryTetrisView.prototype.displayPiece = function(piece) {
 
 	var y = piece.y * 23 + 46;
 	var x = piece.x * 23 + 46;
-	var rotation = piece.rotation * (90);
+	//var rotation = piece.rotation * (90);
 	currentPiece.css({
 		left : x + 'px',
 		top : y + 'px',
-		transform : 'rotate(' + rotation + 'deg)'
+		//transform : 'rotate(' + rotation + 'deg)'
 	});
+	currentPiece.removeClass("rotate0 rotate1 rotate2 rotate3")
+	currentPiece.addClass("rotate"+piece.rotation);
 	currentPiece.show();
+};
+
+JQueryTetrisView.prototype.displayBlock = function(x, y, tetromino) {
+	console.log("JQueryTetrisView.displayGrid");
+	
+	var block = $(this.grid.find('td')[y*10+x]);
+	block.addClass(tetromino+'Shape');
+};
+
+JQueryTetrisView.prototype.displayScore = function(level, lines, points) {
+	scoreChanged.html(points);
+	scoreChanged.show();
+	scoreChanged.slideUp();
 };

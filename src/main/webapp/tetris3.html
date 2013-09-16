@@ -24,158 +24,8 @@ jQuery(document).ready(
 	</script>
 
 
-<style type="text/css">
-.square {
-	background-color: black;
-	border-color: gray;
-	border-style: solid;
-	border-width: thin;
-	display: inline-block;
-	height: 20px;
-	width: 20px;
-}
+<link rel="stylesheet" href="css/tetris.css">
 
-.breaker {
-	display: block;
-	clear: both;
-}
-
-.IShape {
-	background-color: aqua;
-}
-
-.OShape {
-	background-color: yellow;
-}
-
-.TShape {
-	background-color: fuchsia;
-}
-
-.JShape {
-	background-color: blue;
-}
-
-.LShape {
-	background-color: orange;
-}
-
-.SShape {
-	background-color: green;
-}
-
-.ZShape {
-	background-color: red;
-}
-
-.PShape {
-	background-color: gray;
-}
-
-.board {
-	position: absolute;
-	left: 50px;
-	top: 50px;
-	padding: 46px;
-}
-
-.board table {
-	border-collapse: collapse;
-}
-
-.board td {
-	height: 20px;
-	width: 20px;
-	border-color: gray;
-	border-style: solid;
-	border-width: thin;
-}
-
-.shape {
-	position: absolute;
-	top: 46px;
-	left: 46px;
-	transform-origin: 37.5% 37.5%;
-}
-
-.shape:hover {
-	transform: rotate(90deg);
-}
-
-#IShape {
-	top: 46px;
-	left: 46px;
-}
-
-#TShape {
-	top: 46px;
-	left: 184px;
-}
-
-#LShape {
-	top: 161px;
-	left: 46px;
-}
-
-#JShape {
-	top: 161px;
-	left: 184px;
-}
-
-#ZShape {
-	top: 276px;
-	left: 46px;
-	transform-origin: 50% 50%;
-}
-
-#SShape {
-	top: 276px;
-	left: 184px;
-	transform-origin: 50% 50%;
-}
-
-#OShape {
-	top: 391px;
-	left: 115px;
-}
-
-.shape table {
-	border-collapse: collapse;
-}
-
-div.shape td {
-	height: 20px;
-	width: 20px;
-	border-color: transparent;
-	border-style: solid;
-	border-width: thin;
-	text-align: center;
-}
-
-#gameover {
-	color: red;
-	font-style: oblique;
-	font-weight: bold;
-}
-
-#youlose {
-	position: absolute;
-	left: 96px;
-	top: 50px;
-	color: red;
-	font-style: italic;
-	font-weight: bold;
-	font-size: x-large;
-	color: red;
-	top: 50px;
-}
-
-#battle {
-	position: absolute;
-	left: 400px;
-	top: 50px;
-}
-</style>
 </head>
 <body>
 	<div id="page-body">
@@ -675,6 +525,7 @@ div.shape td {
 				</table>
 			</div>
 			<div id="youlose">You lose!</div>
+			<div id="scoreChanged"></div>
 			<div>
 				<div>
 					Level : <span id="score_level"></span>

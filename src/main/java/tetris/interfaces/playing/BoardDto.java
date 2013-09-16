@@ -1,5 +1,7 @@
 package tetris.interfaces.playing;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Result")
@@ -11,6 +13,8 @@ public class BoardDto {
     private PieceDto piece;
 
     private boolean gameOver;
+
+    private List<BlockDto> blocks;
 
     public String[][] getGrid() {
         return grid;
@@ -42,5 +46,13 @@ public class BoardDto {
 
     public void setScore(ScoreDto score) {
         this.score = score;
+    }
+
+    public List<BlockDto> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<BlockDto> blocks) {
+        this.blocks = blocks;
     }
 }

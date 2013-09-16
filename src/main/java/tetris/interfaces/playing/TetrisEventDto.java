@@ -4,11 +4,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import tetris.domain.game.event.TetrisEvent;
 import tetris.domain.game.event.TetrisGameStarted;
-import tetris.domain.game.event.TetrisLineCompleted;
+import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
 import tetris.domain.game.event.TetrisPieceDropped;
+import tetris.domain.game.event.TetrisPieceLocked;
 import tetris.domain.game.event.TetrisPieceMoved;
 import tetris.domain.game.event.TetrisPieceRotated;
+import tetris.domain.game.event.TetrisScoreChanged;
 
 @XmlRootElement(name = "tetrisEvent")
 public class TetrisEventDto {
@@ -20,7 +22,11 @@ public class TetrisEventDto {
 
     public static final String TETRIS_PIECE_DROPPED = "TETRIS_PIECE_DROPPED";
 
-    public static String TETRIS_LINE_COMPLETED = "TETRIS_LINE_COMPLETED";
+    public static final String TETRIS_PIECE_LOCKED = "TETRIS_PIECE_LOCKED";
+
+    public static final String TETRIS_SCORE_CHANGED = "TETRIS_SCORE_CHANGED";
+
+    public static String TETRIS_LINE_CLEARED = "TETRIS_LINE_CLEARED";
 
     private String type;
 
@@ -33,6 +39,10 @@ public class TetrisEventDto {
     private String tetrisId;
 
     private PieceDto piece;
+
+    private boolean newPiece;
+
+    private ScoreDto score;
 
     public String getType() {
         return type;
@@ -92,14 +102,20 @@ public class TetrisEventDto {
             dto.setLastEventId(event.getTimestamp());
             if (event instanceof TetrisPieceRotated) {
                 pieceRotated((TetrisPieceRotated ) event);
-            } else if (event instanceof TetrisLineCompleted) {
-                lineCompleted((TetrisLineCompleted ) event);
+            } else if (event instanceof TetrisLineCleared) {
+                lineCleared((TetrisLineCleared ) event);
             } else if (event instanceof TetrisGameStarted) {
                 gameStarted((TetrisGameStarted ) event);
             } else if (event instanceof TetrisPieceDropped) {
                 pieceDropped((TetrisPieceDropped ) event);
             } else if (event instanceof TetrisPieceMoved) {
                 pieceMoved((TetrisPieceMoved ) event);
+            } else if (event instanceof TetrisPieceLocked) {
+                pieceLocked((TetrisPieceLocked ) event);
+            } else if (event instanceof TetrisScoreChanged) {
+                scoreChanged((TetrisScoreChanged ) event);
+            } else {
+                throw new IllegalArgumentException("Cannot map event " + event);
             }
         }
 
@@ -119,11 +135,12 @@ public class TetrisEventDto {
         public void pieceDropped(TetrisPieceDropped event) {
             dto.setType(TetrisEventDto.TETRIS_PIECE_DROPPED);
             dto.setPiece(new PieceDto(event.getPiece()));
+            dto.setNewPiece(event.isNewPiece());
         }
 
         @Override
-        public void lineCompleted(TetrisLineCompleted event) {
-            dto.setType(TetrisEventDto.TETRIS_LINE_COMPLETED);
+        public void lineCleared(TetrisLineCleared event) {
+            dto.setType(TetrisEventDto.TETRIS_LINE_CLEARED);
             dto.setLineCompleted(event.getLineCount());
         }
 
@@ -132,14 +149,43 @@ public class TetrisEventDto {
             dto.setType(TetrisEventDto.TETRIS_STARTED);
             dto.setStarted(event.isStarted());
         }
+
+        @Override
+        public void pieceLocked(TetrisPieceLocked event) {
+            dto.setType(TetrisEventDto.TETRIS_PIECE_LOCKED);
+            dto.setPiece(new PieceDto(event.getPiece()));
+        }
+
+        @Override
+        public void scoreChanged(TetrisScoreChanged event) {
+            dto.setType(TetrisEventDto.TETRIS_SCORE_CHANGED);
+            dto.setScore(new ScoreDto(event.getScore()));
+
+        }
     }
 
     public void setPiece(PieceDto piece) {
         this.piece = piece;
     };
 
+    public void setScore(ScoreDto score) {
+        this.score = score;
+    }
+
+    public ScoreDto getScore() {
+        return score;
+    }
+
+    public void setNewPiece(boolean newPiece) {
+        this.newPiece = newPiece;
+    }
+
     public PieceDto getPiece() {
         return piece;
+    }
+
+    public boolean isNewPiece() {
+        return newPiece;
     }
 
 }

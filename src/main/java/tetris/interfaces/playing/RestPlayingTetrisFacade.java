@@ -51,9 +51,13 @@ public class RestPlayingTetrisFacade {
         String[][] grid = new String[board.getHeight()][board.getWidth()];
 
         // Copy board
+        List<BlockDto> blocks = new ArrayList<BlockDto>();
         for (Block block : board.getGrid()) {
             if (block != null) {
                 grid[block.getY()][block.getX()] = block.getTetromino().name();
+                if (block.getTetromino() != null) {
+                    blocks.add(new BlockDto(block));
+                }
             }
         }
 
@@ -73,6 +77,7 @@ public class RestPlayingTetrisFacade {
         BoardDto boardDto = new BoardDto();
         boardDto.setScore(scoreDto);
         boardDto.setGrid(grid);
+        boardDto.setBlocks(blocks);
         boardDto.setPiece(pieceDto);
         boardDto.setGameOver(game.isLost());
         return boardDto;

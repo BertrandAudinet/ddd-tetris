@@ -105,3 +105,20 @@ RestTetrisModel.prototype.dropPiece = function() {
 	});
 	return this;
 };
+
+RestTetrisModel.prototype.getBoard = function(tetrisId, lastEventId) {
+	var model = this;
+	var board = null;
+	jQuery(function($) {
+		$.ajax({
+			type : "GET",
+			async : false,
+			url : './ws/playing/' + model.tetrisId + "/board",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				board = data.Result;
+			}			
+		});
+	});
+	return board;
+};
