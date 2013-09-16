@@ -8,7 +8,7 @@ function JQueryTetrisView(html) {
 	this.pushStartButton = this.component.find(".pushStart");
 	this.grid = this.component.find(".board .grid");
 	this.shapes = this.component.find(".board .shape");
-	this.scoreChanged = this.component.find(".scoreChanged");
+	this.scoreChanged = $(this.component.find(".scoreChanged"));
 };
 
 // inherit TetrisView
@@ -103,7 +103,7 @@ JQueryTetrisView.prototype.displayBlock = function(x, y, tetromino) {
 };
 
 JQueryTetrisView.prototype.displayScore = function(level, lines, points) {
-	scoreChanged.html(points);
-	scoreChanged.show();
-	scoreChanged.slideUp();
+	this.scoreChanged.html('+'+points);
+	this.scoreChanged.show();
+	this.scoreChanged.slideUp();
 };

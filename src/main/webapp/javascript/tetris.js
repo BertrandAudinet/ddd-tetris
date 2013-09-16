@@ -192,7 +192,8 @@ TetrisPresenter.prototype.movePiece = function(event) {
 };
 
 TetrisPresenter.prototype.changeScore = function(event) {
-	this.view.displayScore(event.level, event.lines, event.points);
+	var score = event.score;
+	this.view.displayScore(score.level, score.lines, score.points);
 };
 
 
