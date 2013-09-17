@@ -178,14 +178,37 @@ div.shape td {
 	font-size: x-large;
 }
 
-#scoreChanged {
+.scoreUp {
 	position: absolute;
-	left: 96px;
-	top: 150px;	
-	color: yellow;
+	left: -23px;
+	top: 500px;
+	color: black;
 	font-style: italic;
-	font-weight: bold;
-	font-size: x-large;
+	font-weight: bolder;
+	font-size: xx-large;
+	text-align: center;
+	width: 100%;
+}
+
+.score {
+	position: relative;
+	top: 0px;
+	color: black;
+	font-style: italic;
+	font-weight: bolder;
+	font-size: xx-large;
+	text-align: center;
+	width: 100%;
+	opacity: 1;
+	transition: font-size 3s, top 3s, color 3s, opacity 3s;
+	-webkit-transition: font-size 3s, top 3s, color 3s, opacity 3s;
+}
+
+.scoreChanged {
+	font-size: xx-small;
+	top: -400px;
+	color: yellow;
+	opacity: 0;
 }
 
 #battle {
