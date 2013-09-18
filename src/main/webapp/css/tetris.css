@@ -46,7 +46,7 @@
 }
 
 .board {
-	position: absolute;
+	position: relative;
 	left: 50px;
 	top: 50px;
 	padding: 46px;
@@ -176,7 +176,9 @@ div.shape td {
 	font-style: italic;
 	font-weight: bold;
 	font-size: x-large;
+	display: none;	
 }
+
 
 .scoreUp {
 	position: absolute;

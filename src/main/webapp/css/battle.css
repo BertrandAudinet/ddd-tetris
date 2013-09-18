@@ -1,0 +1,12 @@
+.battle .mine {
+	float: left;
+}
+
+.battle .others {
+	float:right;
+}
+
+.battle .others li {
+	list-style: none;
+	display: inline-block;
+}

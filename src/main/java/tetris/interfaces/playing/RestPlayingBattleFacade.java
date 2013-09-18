@@ -16,6 +16,8 @@ import tetris.application.PlayingBattleService;
 import tetris.domain.battle.Battle;
 import tetris.domain.battle.BattleId;
 import tetris.domain.battle.BattleRepository;
+import tetris.domain.battle.Opponent;
+import tetris.domain.battle.event.BattleEvent;
 import tetris.domain.game.TetrisId;
 
 @Path("/battles")
@@ -47,13 +49,28 @@ public class RestPlayingBattleFacade {
 
         battleDto.setStatus(battle.getStatus().name());
 
-        final List<TetrisId> opponents = battle.getOpponents();
+        final List<Opponent> opponents = battle.getOpponents();
         final List<String> listOpponentDto = new ArrayList<String>();
-        for (TetrisId tetrisId : opponents) {
-            listOpponentDto.add(tetrisId.toString());
+        for (Opponent opponent : opponents) {
+            listOpponentDto.add(opponent.getTetrisId().toString());
         }
         battleDto.setOpponents(listOpponentDto);
 
         return battleDto;
+    }
+
+    @GET
+    @Path("/{battleId}/events")
+    @Produces({"application/json" })
+    public List<BattleEventDto> getEvents(@PathParam("battleId")
+    String battleId, @QueryParam("lastEventId")
+    long lastEventId) {
+        final List<BattleEventDto> battleEventsDto = new ArrayList<BattleEventDto>();
+        final List<BattleEvent> events = playingBattleService.getEvents(new BattleId(battleId), lastEventId);
+        for (BattleEvent event : events) {
+            final BattleEventDto battleEventDto = BattleEventDto.map(event);
+            battleEventsDto.add(battleEventDto);
+        }
+        return battleEventsDto;
     }
 }

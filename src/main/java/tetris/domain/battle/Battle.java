@@ -1,12 +1,12 @@
 package tetris.domain.battle;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import tetris.domain.battle.event.BattleEvent;
 import tetris.domain.battle.event.BattleListener;
 import tetris.domain.battle.event.BattlePenaltyLineAdded;
+import tetris.domain.battle.event.BattleStarted;
 import tetris.domain.battle.event.BattleTetrisJoined;
 import tetris.domain.game.TetrisId;
 
@@ -45,10 +45,11 @@ public class Battle {
 
     public void start() {
         this.status = BattleStatus.STARTED;
+        fireBattleEvent(new BattleStarted(battleId, true));
     }
 
-    public List<TetrisId> getOpponents() {
-        return Collections.EMPTY_LIST;
+    public List<Opponent> getOpponents() {
+        return this.opponents;
     }
 
     public BattleStatus getStatus() {
@@ -84,6 +85,8 @@ public class Battle {
                 listener.tetrisJoined((BattleTetrisJoined ) event);
             } else if (event instanceof BattlePenaltyLineAdded) {
                 listener.penaltyLineAdded((BattlePenaltyLineAdded ) event);
+            } else if (event instanceof BattleStarted) {
+                listener.battleStarted((BattleStarted ) event);
             }
         }
     }

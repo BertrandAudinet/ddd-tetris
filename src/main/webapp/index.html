@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Tetris</title>
+
+<script type="text/javascript" src="javascript/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="javascript/jquery.timer.js"></script>
+<!-- Tetris -->
+<script type="text/javascript" src="javascript/tetris.js"></script>
+<script type="text/javascript" src="javascript/JQueryTetrisView.js"></script>
+<script type="text/javascript" src="javascript/RestTetrisModel.js"></script>
+<!-- Battle -->
+<script type="text/javascript" src="javascript/BattlePresenter.js"></script>
+<script type="text/javascript" src="javascript/JQueryBattleView.js"></script>
+<script type="text/javascript" src="javascript/RestBattleModel.js"></script>
+<!-- Application -->
+<script type="text/javascript" src="javascript/Application.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(
+		function($) {
+			var applicationView = new ApplicationView($(".application"))
+			var applicationModel = new ApplicationModel();
+			var applicationPresenter = new ApplicationPresenter(applicationView, applicationModel);
+			applicationPresenter.init();
+		});
+	</script>
+
+<link rel="stylesheet" href="css/tetris.css">
+<style type="text/css">
+	.tetrisView {
+		float: left;
+		display: inline-block;
+	}
+
+	.battleView {
+		float: right;
+		display: inline-block;
+	}
+
+</style>
+
+</head>
+<body>
+	<div class="application">
+	<ul>
+		<li><a href="#tetrisView" class="pushStart">PUSH START</a></li>
+		<li><a href="#battleView" class="joinBattle">JOIN BATTLE</a></li>
+	</ul>
+	<div id="tetrisView" class="tetrisView"></div>
+	<div id="battleView" class="battleView"></div>
+	</div>
+</body>
+</html>

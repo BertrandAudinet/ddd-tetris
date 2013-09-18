@@ -3,7 +3,7 @@ package tetris.domain.battle;
 import org.junit.Assert;
 import org.junit.Test;
 
-import tetris.domain.battle.event.BattleListener;
+import tetris.domain.battle.event.BattleAdapter;
 import tetris.domain.battle.event.BattlePenaltyLineAdded;
 import tetris.domain.battle.event.BattleTetrisJoined;
 import tetris.domain.game.TetrisId;
@@ -23,7 +23,7 @@ public class BattleTest {
         battle.addOpponent(new TetrisId("T1"));
         battle.addOpponent(new TetrisId("T2"));
 
-        battle.addBattleListener(new BattleListener() {
+        battle.addBattleListener(new BattleAdapter() {
 
             @Override
             public void penaltyLineAdded(BattlePenaltyLineAdded event) {

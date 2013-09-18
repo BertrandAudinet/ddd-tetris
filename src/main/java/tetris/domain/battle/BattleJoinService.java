@@ -22,8 +22,6 @@ public class BattleJoinService {
             battle = awaitedBattles.get(0);
         }
 
-        battle.addOpponent(tetris.getTetrisId());
-
         return battle;
 
     }

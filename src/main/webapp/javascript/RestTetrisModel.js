@@ -1,7 +1,12 @@
-function RestTetrisModel() {
+/**
+ * @constructor
+ * @param [String} tetrisId
+ */
+function RestTetrisModel(tetrisId) {
 	// Call the parent constructor
 	TetrisModel.call(this);
-	this.tetrisId = null;
+	this.tetrisId = tetrisId;
+	this.lastEventId = 0;
 	this.handlers = new Array();
 };
 
@@ -16,7 +21,7 @@ RestTetrisModel.prototype.playNewTetris = function() {
 			data : '',
 			success : function(data, textStatus, jqXHR) {
 				model.tetrisId = data;
-				model.getEvent(model.tetrisId, 0);
+				model.getEvent();
 			},
 			dataType : 'text'
 		});
@@ -35,10 +40,10 @@ RestTetrisModel.prototype.start = function() {
 	});
 };
 
-RestTetrisModel.prototype.getEvent = function(tetrisId, lastEventId) {
+RestTetrisModel.prototype.getEvent = function() {
 	var model = this;
 	jQuery(function($) {
-		$.get('./ws/playing/' + tetrisId + "/events?lastEventId="+lastEventId).done(
+		$.get('./ws/playing/' + model.tetrisId + "/events?lastEventId="+model.lastEventId).done(
 				function(data, textStatus, jqXHR) {
 					var events = data.tetrisEvent;
 					//console.log("getEvents done : count=");
@@ -48,6 +53,7 @@ RestTetrisModel.prototype.getEvent = function(tetrisId, lastEventId) {
 							var handler = model.handlers[j];
 							handler(event);
 						}
+						model.lastEventId = event.lastEventId;
 					}
 				}).fail(function(jqXHR, textStatus, errorThrown) {
 			alert('error');

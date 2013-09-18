@@ -35,6 +35,9 @@
 	<bean
 		class="tetris.infrastucture.persistence.inmemory.InMemoryTetrisEventRepository">
 	</bean>
+	<bean
+		class="tetris.infrastucture.persistence.inmemory.InMemoryBattleEventRepository">
+	</bean>
 
 	<bean id="tetrisScheduler" class="tetris.infrastucture.scheduler.GameScheduler">
 	</bean>

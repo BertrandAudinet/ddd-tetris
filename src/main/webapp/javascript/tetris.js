@@ -66,7 +66,7 @@ TetrisModel.prototype.rotatePiece = function(direction) {
 TetrisModel.prototype.dropPiece = function() {
 };
 
-TetrisModel.prototype.getEvent = function(tetrisId, lastEventId) {
+TetrisModel.prototype.getEvent = function() {
 };
 
 TetrisModel.prototype.getBoard = function(tetrisId) {
@@ -82,8 +82,6 @@ TetrisModel.prototype.getBoard = function(tetrisId) {
 function TetrisPresenter(view, model) {
 	this.view = view;
 	this.model = model;
-	this.tetrisId = null;
-	this.lastEventId = 0;
 };
 
 TetrisPresenter.prototype.init = function() {
@@ -106,40 +104,40 @@ TetrisPresenter.prototype.init = function() {
 	this.model.addTetrisEventHandler(function(event) {
 		presenter.onTetrisEvent(event);
 	});
-};
-
-TetrisPresenter.prototype.pushStart = function() {
-	this.tetrisId = this.model.playNewTetris();
+	
 	this.view.clearGrid();
 	this.view.hideShape();
-	this.model.start();
-	var presenter = this;
+
 	var timer = $.timer(function() {
-		presenter.model.getEvent(presenter.tetrisId, presenter.lastEventId);
+		presenter.model.getEvent();
 		timer.once(500);
 	}, 500, false);
 	timer.once(500);
+};
 
+TetrisPresenter.prototype.pushStart = function() {
+	this.model.playNewTetris();
+	this.model.start();
 };
 
 TetrisPresenter.prototype.onMoveLeft = function() {
 	this.model.movePiece('LEFT');
-	this.model.getEvent(this.tetrisId, this.lastEventId);
+	this.model.getEvent();
 };
 
 TetrisPresenter.prototype.onMoveRight = function() {
 	this.model.movePiece('RIGHT');
-	this.model.getEvent(this.tetrisId, this.lastEventId);
+	this.model.getEvent();
 };
 
 TetrisPresenter.prototype.onRotatePiece = function() {
 	this.model.rotatePiece('RIGHT');
-	this.model.getEvent(this.tetrisId, this.lastEventId);
+	this.model.getEvent();
 };
 
 TetrisPresenter.prototype.onDropPiece = function() {
 	this.model.dropPiece();
-	this.model.getEvent(this.tetrisId, this.lastEventId);
+	this.model.getEvent();
 };
 
 TetrisPresenter.prototype.onTetrisEvent = function(event) {

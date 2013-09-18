@@ -6,4 +6,6 @@ public interface BattleListener extends EventListener {
     void penaltyLineAdded(BattlePenaltyLineAdded event);
 
     void tetrisJoined(BattleTetrisJoined event);
+
+    void battleStarted(BattleStarted event);
 }

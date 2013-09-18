@@ -12,9 +12,13 @@ import tetris.domain.battle.BattleId;
 import tetris.domain.battle.BattleJoinService;
 import tetris.domain.battle.BattleRepository;
 import tetris.domain.battle.BattleStatus;
+import tetris.domain.battle.Opponent;
+import tetris.domain.battle.event.BattleAdapter;
+import tetris.domain.battle.event.BattleEvent;
+import tetris.domain.battle.event.BattleEventQueue;
+import tetris.domain.battle.event.BattleEventRepository;
 import tetris.domain.battle.event.BattleListener;
 import tetris.domain.battle.event.BattlePenaltyLineAdded;
-import tetris.domain.battle.event.BattleTetrisJoined;
 import tetris.domain.game.Game;
 import tetris.domain.game.GameRepository;
 import tetris.domain.game.TetrisId;
@@ -32,27 +36,27 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
     @Autowired
     private BattleJoinService battleJoinService;
 
+    @Autowired
+    private BattleEventRepository battleEventRepository;
+
+    @Autowired
+    private PlayingTetrisService playingTetrisService;
+
     @Override
     public BattleId joinBattle(TetrisId tetrisId) {
         final Game tetris = gameRepository.find(tetrisId);
 
         final Battle battle = battleJoinService.joinBattle(tetris);
-        battle.addBattleListener(new BattleListener() {
 
-            @Override
-            public void tetrisJoined(BattleTetrisJoined event) {
-                // TODO Auto-generated method stub
+        final BattleEventQueue eventQueue = new BattleEventQueue();
+        battle.addBattleListener(eventQueue);
 
-            }
+        battle.addOpponent(tetris.getTetrisId());
 
-            @Override
-            public void penaltyLineAdded(BattlePenaltyLineAdded event) {
-                // TODO Auto-generated method stub
-
-            }
-        });
+        battle.removeBattleListener(eventQueue);
 
         battleRepository.store(battle);
+        battleEventRepository.store(eventQueue);
         log.info("Tetris id " + tetrisId + " joins a battle with battle id " + battle.getBattleId());
 
         return battle.getBattleId();
@@ -62,15 +66,23 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
     public void startBattle(BattleId battleId) {
         final Battle battle = battleRepository.find(battleId);
 
+        final BattleEventQueue eventQueue = new BattleEventQueue();
+        battle.addBattleListener(eventQueue);
+
         battle.start();
+
+        battle.removeBattleListener(eventQueue);
+
         battleRepository.store(battle);
+        battleEventRepository.store(eventQueue);
 
-        final List<TetrisId> opponents = battle.getOpponents();
-        for (TetrisId tetrisId : opponents) {
-            final Game tetris = gameRepository.find(tetrisId);
-
-            tetris.start();
-            gameRepository.store(tetris);
+        final List<Opponent> opponents = battle.getOpponents();
+        for (Opponent opponent : opponents) {
+            playingTetrisService.startTetris(opponent.getTetrisId());
+            // final Game tetris = gameRepository.find(tetrisId);
+            //
+            // tetris.start();
+            // gameRepository.store(tetris);
         }
 
         log.info("Started new battle with battle id " + battleId);
@@ -89,13 +101,7 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
     @Override
     public void addPenaltyLine(BattleId battleId, TetrisId tetrisId, int lineCount) {
         final Battle battle = battleRepository.find(battleId);
-        final BattleListener listener = new BattleListener() {
-
-            @Override
-            public void tetrisJoined(BattleTetrisJoined event) {
-                // TODO Auto-generated method stub
-
-            }
+        final BattleListener listener = new BattleAdapter() {
 
             @Override
             public void penaltyLineAdded(BattlePenaltyLineAdded event) {
@@ -119,5 +125,10 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
             return null;
         }
         return battle.getBattleId();
+    }
+
+    @Override
+    public List<BattleEvent> getEvents(BattleId battleId, long lastEventId) {
+        return battleEventRepository.findNextBattleEvents(battleId, lastEventId);
     }
 }
