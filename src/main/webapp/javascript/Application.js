@@ -23,7 +23,6 @@ ApplicationView.prototype.displayTetris = function(tetrisId) {
 		var presenter = new TetrisPresenter(view, model);
 		presenter.init();
 	});
-	this.tetrisView.focus();
 };
 
 ApplicationView.prototype.displayBattle = function(battleId, tetrisId) {
@@ -84,6 +83,16 @@ ApplicationModel.prototype.joinBattle = function(tetrisId) {
 	return battleId;
 };
 
+ApplicationModel.prototype.startTetris = function(tetrisId) {
+	$.get('./ws/playing/'+tetrisId+'/start')
+	.done(function(data, textStatus, jqXHR) {
+		console.log("start game for tetris id="+tetrisId);
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) { 
+		alert('error'); 
+	});
+};
+
 /**
  * @constructor
  * @param {ApplicationView}
@@ -110,6 +119,7 @@ ApplicationPresenter.prototype.init = function() {
 ApplicationPresenter.prototype.onPushStart = function() {
 	var tetrisId = this.model.playNewTetris();
 	this.view.displayTetris(tetrisId);
+	this.model.startTetris(tetrisId);
 };
 
 ApplicationPresenter.prototype.onJoinBattle = function() {
