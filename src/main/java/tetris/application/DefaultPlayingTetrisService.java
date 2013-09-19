@@ -79,9 +79,15 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     public void dropPiece(TetrisId tetrisId) {
         final Game game = gameRepository.find(tetrisId);
 
+        final TetrisEventQueue eventQueue = new TetrisEventQueue();
+        game.addTetrisListener(eventQueue);
+
         game.dropPiece();
 
+        game.removeTetrisListener(eventQueue);
+
         gameRepository.store(game);
+        tetrisEventRepository.store(eventQueue);
         log.info("Dropped piece for tetris " + tetrisId);
     }
 

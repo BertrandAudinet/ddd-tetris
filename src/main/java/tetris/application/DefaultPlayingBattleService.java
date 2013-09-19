@@ -22,6 +22,8 @@ import tetris.domain.battle.event.BattlePenaltyLineAdded;
 import tetris.domain.game.Game;
 import tetris.domain.game.GameRepository;
 import tetris.domain.game.TetrisId;
+import tetris.domain.game.event.TetrisEventQueue;
+import tetris.domain.game.event.TetrisEventRepository;
 
 @Service
 public class DefaultPlayingBattleService implements PlayingBattleService {
@@ -38,6 +40,9 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
 
     @Autowired
     private BattleEventRepository battleEventRepository;
+
+    @Autowired
+    private TetrisEventRepository tetrisEventRepository;
 
     @Autowired
     private PlayingTetrisService playingTetrisService;
@@ -101,13 +106,20 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
     @Override
     public void addPenaltyLine(BattleId battleId, TetrisId tetrisId, int lineCount) {
         final Battle battle = battleRepository.find(battleId);
+
         final BattleListener listener = new BattleAdapter() {
 
             @Override
             public void penaltyLineAdded(BattlePenaltyLineAdded event) {
                 final Game tetris = gameRepository.find(event.getTetrisId());
+
+                final TetrisEventQueue eventQueue = new TetrisEventQueue();
+                tetris.addTetrisListener(eventQueue);
+
                 tetris.addPenaltyLine(event.getLineCount());
+
                 gameRepository.store(tetris);
+                tetrisEventRepository.store(eventQueue);
             }
         };
         battle.addBattleListener(listener);
@@ -115,6 +127,7 @@ public class DefaultPlayingBattleService implements PlayingBattleService {
         battle.addPenaltyLine(tetrisId, lineCount);
 
         battle.removeBattleListener(listener);
+
         battleRepository.store(battle);
     }
 

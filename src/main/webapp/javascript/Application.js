@@ -1,3 +1,5 @@
+var refreshTime =  250;	
+
 /**
  * @constructor
  */

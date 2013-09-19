@@ -16,4 +16,6 @@ public interface TetrisListener extends EventListener {
     void pieceLocked(TetrisPieceLocked event);
 
     void scoreChanged(TetrisScoreChanged event);
+
+    void receiveLinePenalty(TetrisPenaltyLineReceived event);
 }

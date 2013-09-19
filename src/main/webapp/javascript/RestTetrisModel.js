@@ -1,6 +1,7 @@
 /**
  * @constructor
- * @param [String} tetrisId
+ * @param [String}
+ *            tetrisId
  */
 function RestTetrisModel(tetrisId) {
 	// Call the parent constructor
@@ -8,6 +9,10 @@ function RestTetrisModel(tetrisId) {
 	this.tetrisId = tetrisId;
 	this.lastEventId = 0;
 	this.handlers = new Array();
+	var model = this;
+	this.timer = $.timer(function() {
+		model.getEvent();
+	}, refreshTime, false);
 };
 
 RestTetrisModel.prototype.playNewTetris = function() {
@@ -31,22 +36,23 @@ RestTetrisModel.prototype.playNewTetris = function() {
 
 RestTetrisModel.prototype.start = function() {
 	var model = this;
-	$.get('./ws/playing/'+model.tetrisId+'/start')
-	.done(function(data, textStatus, jqXHR) {
-		console.log("start game for tetris id="+model.tetrisId);
-	})
-	.fail(function(jqXHR, textStatus, errorThrown) { 
-		alert('error'); 
+	$.get('./ws/playing/' + model.tetrisId + '/start').done(
+			function(data, textStatus, jqXHR) {
+				console.log("start game for tetris id=" + model.tetrisId);
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+		alert('error');
 	});
 };
 
 RestTetrisModel.prototype.getEvent = function() {
 	var model = this;
 	jQuery(function($) {
-		$.get('./ws/playing/' + model.tetrisId + "/events?lastEventId="+model.lastEventId).done(
+		$.get(
+				'./ws/playing/' + model.tetrisId + "/events?lastEventId="
+						+ model.lastEventId).done(
 				function(data, textStatus, jqXHR) {
 					var events = data.tetrisEvent;
-					//console.log("getEvents done : count=");
+					// console.log("getEvents done : count=");
 					for ( var i = 0; i < events.length; i++) {
 						var event = events[i];
 						for ( var j = 0; j < model.handlers.length; j++) {
@@ -55,14 +61,17 @@ RestTetrisModel.prototype.getEvent = function() {
 						}
 						model.lastEventId = event.lastEventId;
 					}
+					model.timer.once(refreshTime);
 				}).fail(function(jqXHR, textStatus, errorThrown) {
-			alert('error');
+			model.timer.stop();
+			alert('Error = ' + errorThrown);
 		});
 	});
 };
 
 RestTetrisModel.prototype.addTetrisEventHandler = function(handler) {
 	this.handlers.push(handler);
+	this.timer.once(refreshTime);
 };
 
 RestTetrisModel.prototype.rotatePiece = function(direction) {
@@ -74,7 +83,8 @@ RestTetrisModel.prototype.rotatePiece = function(direction) {
 			contentType : 'application/json',
 			data : '{ "rotate" : { "direction": ' + direction + ' }}',
 			success : function() {
-				console.log("rotate piece to "+direction+" for tetris id="+model.tetrisId);
+				console.log("rotate piece to " + direction + " for tetris id="
+						+ model.tetrisId);
 			}
 		});
 	});
@@ -90,7 +100,8 @@ RestTetrisModel.prototype.movePiece = function(direction) {
 			contentType : 'application/json',
 			data : '{ "move" : { "direction": ' + direction + '}}',
 			success : function() {
-				console.log("move piece to "+direction+" for tetris id="+model.tetrisId);
+				console.log("move piece to " + direction + " for tetris id="
+						+ model.tetrisId);
 			}
 		});
 	});
@@ -105,14 +116,14 @@ RestTetrisModel.prototype.dropPiece = function() {
 			url : './ws/playing/' + model.tetrisId + '/drop',
 			contentType : 'application/json',
 			success : function() {
-				console.log("drop piece for tetris id="+model.tetrisId);
+				console.log("drop piece for tetris id=" + model.tetrisId);
 			}
 		});
 	});
 	return this;
 };
 
-RestTetrisModel.prototype.getBoard = function(tetrisId, lastEventId) {
+RestTetrisModel.prototype.getBoard = function() {
 	var model = this;
 	var board = null;
 	jQuery(function($) {
@@ -123,7 +134,7 @@ RestTetrisModel.prototype.getBoard = function(tetrisId, lastEventId) {
 			contentType : 'application/json',
 			success : function(data, textStatus, jqXHR) {
 				board = data.Result;
-			}			
+			}
 		});
 	});
 	return board;

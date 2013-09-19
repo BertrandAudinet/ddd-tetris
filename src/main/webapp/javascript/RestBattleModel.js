@@ -7,6 +7,11 @@ function RestBattleModel(battleId, tetrisId) {
 	this.tetrisId = tetrisId;
 	this.lastEventId = 0;
 	this.handlers = new Array();
+	
+	var model = this;
+	this.timer = $.timer(function() {
+		model.getEvents();
+	}, refreshTime, false);
 };
 
 // inherit BattleModel
@@ -34,6 +39,8 @@ RestBattleModel.prototype.getBattle = function() {
 
 RestBattleModel.prototype.addBattleEventHandler = function(handler) {
 	this.handlers.push(handler);
+	this.timer.once(refreshTime);
+
 };
 
 RestBattleModel.prototype.getEvents = function() {
@@ -51,8 +58,12 @@ RestBattleModel.prototype.getEvents = function() {
 						}
 						model.lastEventId = event.lastEventId;
 					}
+					model.timer.once(refreshTime);
+					
 				}).fail(function(jqXHR, textStatus, errorThrown) {
-			alert('error');
+					model.timer.stop();
+					alert('Error = '+errorThrown);
+					
 		});
 	});
 };

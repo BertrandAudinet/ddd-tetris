@@ -73,4 +73,9 @@ public class TetrisEventQueue implements TetrisListener {
     public void scoreChanged(TetrisScoreChanged event) {
         push(event);
     }
+
+    @Override
+    public void receiveLinePenalty(TetrisPenaltyLineReceived event) {
+        push(event);
+    }
 }

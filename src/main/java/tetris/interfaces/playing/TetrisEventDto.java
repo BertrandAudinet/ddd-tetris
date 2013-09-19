@@ -6,6 +6,7 @@ import tetris.domain.game.event.TetrisEvent;
 import tetris.domain.game.event.TetrisGameStarted;
 import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
+import tetris.domain.game.event.TetrisPenaltyLineReceived;
 import tetris.domain.game.event.TetrisPieceDropped;
 import tetris.domain.game.event.TetrisPieceLocked;
 import tetris.domain.game.event.TetrisPieceMoved;
@@ -27,6 +28,8 @@ public class TetrisEventDto {
     public static final String TETRIS_SCORE_CHANGED = "TETRIS_SCORE_CHANGED";
 
     public static String TETRIS_LINE_CLEARED = "TETRIS_LINE_CLEARED";
+
+    public static String TETRIS_PENALTY_LINE_RECEIVED = "TETRIS_PENALTY_LINE_RECEIVED";
 
     private String type;
 
@@ -114,6 +117,8 @@ public class TetrisEventDto {
                 pieceLocked((TetrisPieceLocked ) event);
             } else if (event instanceof TetrisScoreChanged) {
                 scoreChanged((TetrisScoreChanged ) event);
+            } else if (event instanceof TetrisPenaltyLineReceived) {
+                receiveLinePenalty((TetrisPenaltyLineReceived ) event);
             } else {
                 throw new IllegalArgumentException("Cannot map event " + event);
             }
@@ -160,7 +165,11 @@ public class TetrisEventDto {
         public void scoreChanged(TetrisScoreChanged event) {
             dto.setType(TetrisEventDto.TETRIS_SCORE_CHANGED);
             dto.setScore(new ScoreDto(event.getScore()));
+        }
 
+        @Override
+        public void receiveLinePenalty(TetrisPenaltyLineReceived event) {
+            dto.setType(TetrisEventDto.TETRIS_PENALTY_LINE_RECEIVED);
         }
     }
 

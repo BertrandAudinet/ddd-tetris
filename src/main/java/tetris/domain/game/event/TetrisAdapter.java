@@ -30,4 +30,8 @@ public class TetrisAdapter implements TetrisListener {
     public void scoreChanged(TetrisScoreChanged event) {
     }
 
+    @Override
+    public void receiveLinePenalty(TetrisPenaltyLineReceived event) {
+    }
+
 }

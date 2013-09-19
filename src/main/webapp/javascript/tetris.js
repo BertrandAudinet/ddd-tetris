@@ -108,11 +108,6 @@ TetrisPresenter.prototype.init = function() {
 	this.view.clearGrid();
 	this.view.hideShape();
 
-	var timer = $.timer(function() {
-		presenter.model.getEvent();
-		timer.once(500);
-	}, 500, false);
-	timer.once(500);
 };
 
 TetrisPresenter.prototype.pushStart = function() {
@@ -153,6 +148,8 @@ TetrisPresenter.prototype.onTetrisEvent = function(event) {
 		this.dropPiece(event);
 	} else if (type == "TETRIS_PIECE_LOCKED") {
 		this.loadGrid(event);
+	} else if (type == "TETRIS_PENALTY_LINE_RECEIVED") {
+		this.reLoadGrid(event);
 	} else if (type == "TETRIS_SCORE_CHANGED") {
 		this.changeScore(event);
 	} else {
@@ -201,5 +198,17 @@ TetrisPresenter.prototype.loadGrid = function(event) {
 	for(var i=0; i < blocks.length; i++){
 		var block = blocks[i];
 		this.view.displayBlock(block.x, block.y, block.tetromino);
+	}
+};
+
+TetrisPresenter.prototype.reLoadGrid = function(event) {
+	var board = this.model.getBoard();
+	var blocks = board.blocks;
+	this.view.clearGrid();
+	if (blocks) {
+		for(var i=0; i < blocks.length; i++){
+			var block = blocks[i];
+			this.view.displayBlock(block.x, block.y, block.tetromino);
+		}
 	}
 };

@@ -6,6 +6,7 @@ import java.util.List;
 import tetris.domain.game.event.TetrisGameStarted;
 import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
+import tetris.domain.game.event.TetrisPenaltyLineReceived;
 import tetris.domain.game.event.TetrisPieceDropped;
 import tetris.domain.game.event.TetrisPieceLocked;
 import tetris.domain.game.event.TetrisPieceMoved;
@@ -133,6 +134,7 @@ public class Game {
 
     public void addPenaltyLine(int lineCount) {
         this.board = board.insertPenaltyLine(lineCount);
+        fireLinePenaltyReceived(lineCount);
 
     }
 
@@ -218,7 +220,13 @@ public class Game {
             TetrisScoreChanged event = new TetrisScoreChanged(tetrisId, score);
             listener.scoreChanged(event);
         }
-
     }
 
+    protected void fireLinePenaltyReceived(int lineCount) {
+        for (TetrisListener listener : listeners) {
+            TetrisPenaltyLineReceived event = new TetrisPenaltyLineReceived(tetrisId, lineCount);
+            listener.receiveLinePenalty(event);
+        }
+
+    }
 }

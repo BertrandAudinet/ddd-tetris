@@ -21,11 +21,6 @@ BattlePresenter.prototype.init = function() {
 		presenter.onBattleEvent(event);
 	});
 	
-	var timer = $.timer(function() {
-		presenter.model.getEvents();
-		timer.once(500);
-	}, 500, false);
-	timer.once(500);
 };
 
 BattlePresenter.prototype.onBattleEvent = function(event) {

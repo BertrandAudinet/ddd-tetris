@@ -4,8 +4,8 @@
 	border-style: solid;
 	border-width: thin;
 	display: inline-block;
-	height: 20px;
-	width: 20px;
+	height: 10px;
+	width: 10px;
 }
 
 .breaker {
@@ -47,9 +47,7 @@
 
 .board {
 	position: relative;
-	left: 50px;
-	top: 50px;
-	padding: 46px;
+	padding: 26px;
 }
 
 .board table {
@@ -57,8 +55,8 @@
 }
 
 .board td {
-	height: 20px;
-	width: 20px;
+	height: 10px;
+	width: 10px;
 	border-color: gray;
 	border-style: solid;
 	border-width: thin;
@@ -66,8 +64,8 @@
 
 .shape {
 	position: absolute;
-	top: 46px;
-	left: 46px;
+	top: 26px;
+	left: 26px;
 }
 
 .shape:hover {
@@ -101,15 +99,15 @@
 }
 
 #IShape {
-	top: 46px;
-	left: 46px;
+	top: 26px;
+	left: 26px;
 	transform-origin: 37.5% 37.5%;
 	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
 	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
 }
 
 #TShape {
-	top: 46px;
+	top: 26px;
 	left: 184px;
 	transform-origin: 37.5% 37.5%;
 	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
@@ -118,7 +116,7 @@
 
 #LShape {
 	top: 161px;
-	left: 46px;
+	left: 26px;
 	transform-origin: 37.5% 37.5%;
 	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
 	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
@@ -134,7 +132,7 @@
 
 #ZShape {
 	top: 276px;
-	left: 46px;
+	left: 26px;
 	transform-origin: 50% 50%;
 }
 
@@ -154,8 +152,8 @@
 }
 
 div.shape td {
-	height: 20px;
-	width: 20px;
+	height: 10px;
+	width: 10px;
 	border-color: transparent;
 	border-style: solid;
 	border-width: thin;
