@@ -78,4 +78,9 @@ public class TetrisEventQueue implements TetrisListener {
     public void receiveLinePenalty(TetrisPenaltyLineReceived event) {
         push(event);
     }
+
+    public TetrisEvent getLastEvent() {
+        return queue.peek();
+    }
+
 }

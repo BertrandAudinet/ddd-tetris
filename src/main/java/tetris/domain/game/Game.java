@@ -119,6 +119,7 @@ public class Game {
 
     public void stop() {
         this.started = false;
+        fireGameStarted(false);
     }
 
     public void dropNewPiece(Tetromino tetromino) {

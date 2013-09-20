@@ -1,8 +1,11 @@
 package tetris.domain.game;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
+
+import tetris.domain.game.event.TetrisEventQueue;
+import tetris.domain.game.event.TetrisGameStarted;
+import tetris.domain.game.event.TetrisPieceDropped;
 
 public class GameTest {
 
@@ -34,15 +37,6 @@ public class GameTest {
     }
 
     @Test
-    public void testFallPiece_FullBoard_PieceNotFallen() {
-        final Game game = new Game(Board.defaultBoard().fill(), new Shape(5, 0, Tetromino.I));
-
-        game.fallPiece();
-
-        Assert.assertNull(game.getPiece());
-    }
-
-    @Test
     public void testFallPiece_OnCollision_PieceFilled() {
         final int lastLine = Board.DEFAULT_HEIGHT - 1;
         final Game game =
@@ -61,5 +55,69 @@ public class GameTest {
         game.dropNewPiece(Tetromino.T);
 
         Assert.assertTrue(game.isLost());
+    }
+
+    @Test
+    public void testNewGame_DefaultState_IsNotStarted() {
+        final Game game = new Game(new TetrisId("T1"));
+
+        game.start();
+
+        Assert.assertTrue(game.isStarted());
+    }
+
+    @Test
+    public void testNewGame_StartIt_IsStarted() {
+        final Game game = new Game(new TetrisId("T1"));
+
+        game.start();
+
+        Assert.assertTrue(game.isStarted());
+    }
+
+    @Test
+    public void testNewGame_StopIt_IsNotStarted() {
+        final Game game = new Game(new TetrisId("T1"));
+
+        game.stop();
+
+        Assert.assertFalse(game.isStarted());
+    }
+
+    @Test
+    public void testAddTetrisListener_StartGame_EventIsTetrisGameStarted() {
+        final Game game = new Game(new TetrisId("T1"));
+        TetrisEventQueue queue = new TetrisEventQueue();
+        game.addTetrisListener(queue);
+
+        game.start();
+        final TetrisGameStarted actual = (TetrisGameStarted ) queue.getLastEvent();
+
+        Assert.assertTrue(actual.isStarted());
+    }
+
+    @Test
+    public void testAddTetrisListener_StopGame_EventIsTetrisGameStarted() {
+        final Game game = new Game(new TetrisId("T1"));
+        TetrisEventQueue queue = new TetrisEventQueue();
+        game.addTetrisListener(queue);
+
+        game.stop();
+        final TetrisGameStarted actual = (TetrisGameStarted ) queue.getLastEvent();
+
+        Assert.assertFalse(actual.isStarted());
+
+    }
+
+    @Test
+    public void testAddTetrisListener_DropNewPiece_EventIsTetrisPieceDropped() throws Exception {
+        final Game game = new Game(new TetrisId("T1"));
+        TetrisEventQueue queue = new TetrisEventQueue();
+        game.addTetrisListener(queue);
+
+        game.dropNewPiece(Tetromino.T);
+        final TetrisPieceDropped actual = (TetrisPieceDropped ) queue.getLastEvent();
+
+        Assert.assertTrue(actual.isNewPiece());
     }
 }

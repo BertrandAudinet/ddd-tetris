@@ -56,7 +56,7 @@ public class ShapeTest {
 
         final Shape actual = shape.rotateRight();
 
-        Assert.assertEquals(1, actual.getBlocks());
+        Assert.assertEquals(1, actual.getRotation());
     }
 
     @Test

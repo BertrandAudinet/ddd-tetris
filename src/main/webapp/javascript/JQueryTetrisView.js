@@ -13,7 +13,6 @@ function JQueryTetrisView(html, isActive) {
 	this.keyDowns = {};
 	var cssPadding = this.grid.parent().css("padding-left");
 	this.padding = 1 * cssPadding.substring(0, cssPadding.length-2);
-		
 };
 
 // inherit TetrisView
@@ -154,5 +153,4 @@ JQueryTetrisView.prototype.displayScore = function(level, lines, points) {
 	$(".scoreChanged").remove();
 	this.score.append('<span class="score">+' + points + '</span>');
 	$(".score").delay(500).addClass("scoreChanged");
-
 };

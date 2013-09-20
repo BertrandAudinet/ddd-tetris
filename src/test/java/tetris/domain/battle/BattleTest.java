@@ -41,16 +41,4 @@ public class BattleTest {
 
     }
 
-    @Test
-    public void testAddPenaltyLine_() {
-        final Battle battle = new Battle(new BattleId("B1"));
-        battle.addOpponent(new TetrisId("T1"));
-        battle.addOpponent(new TetrisId("T2"));
-
-        battle.addPenaltyLine(new TetrisId("T1"), 1);
-
-        final int actual = battle.getOpponent(new TetrisId("T1")).getPenaltyLineCount();
-
-        Assert.assertEquals(1, actual);
-    }
 }

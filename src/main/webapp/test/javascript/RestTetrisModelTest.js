@@ -20,7 +20,7 @@ jQuery(function($) {
 		var actual = null;
 		model.addTetrisEventHandler(function(event) {
 			actual = event;
-			equal(actual, "");
+			equals(actual, "");
 		});
 		model.start();
 		
