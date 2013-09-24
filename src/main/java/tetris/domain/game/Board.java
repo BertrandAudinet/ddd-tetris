@@ -3,7 +3,6 @@ package tetris.domain.game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Board {
     public static int DEFAULT_WIDTH = 10;
@@ -41,10 +40,16 @@ public class Board {
     }
 
     public Board fillBlock(Block block) {
+        if (block == null) {
+            throw new IllegalArgumentException("block can't be null");
+        }
         return fillBlocks(block);
     }
 
     public Board fillShape(Shape shape) {
+        if (shape == null) {
+            throw new IllegalArgumentException("shape can't be null");
+        }
         List<Block> blocks = new ArrayList<Block>();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -168,6 +173,83 @@ public class Board {
         return lines;
     }
 
+    public Block[] getGrid() {
+        return grid;
+    }
+
+    public List<Integer> getCompletedLine() {
+        boolean[] completedLines = new boolean[height];
+
+        // search completed lines
+        for (int y = 0; y < height; y++) {
+            completedLines[y] = true;
+            for (int x = 0; x < width; x++) {
+                final Block block = getBlockAt(x, y);
+                if (block == null) {
+                    completedLines[y] = false;
+                }
+            }
+        }
+
+        List<Integer> linesClear = new ArrayList<Integer>();
+        int count = 0;
+        for (int i = 0; i < completedLines.length; i++) {
+            if (completedLines[i]) {
+                count++;
+                linesClear.add(i);
+            }
+        }
+        return linesClear;
+    }
+
+    public Board insertLine(int line) throws BlockOutOfBoundsException {
+        final Block[] newGrid = new Block[width * height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int index = y * width + x;
+                Block block = grid[index];
+                if (y == 0 && block != null) {
+                    throw new BlockOutOfBoundsException(block);
+                }
+                if (y < line) {
+                    int origin = (y + 1) * width + x;
+                    block = grid[origin];
+                    if (block != null) {
+                        block = block.moveUp();
+                    }
+                } else if (y == line) {
+                    block = new Block(x, y, Tetromino.T);
+                }
+                newGrid[index] = block;
+            }
+        }
+
+        return new Board(width, height, newGrid);
+    }
+
+    public Board removeLine(int line) {
+        final Block[] newGrid = new Block[width * height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int index = y * width + x;
+                Block block = grid[index];
+                if (y == 0) {
+                    block = null;
+                } else if (y <= line) {
+                    int origin = (y - 1) * width + x;
+                    block = grid[origin];
+                    if (block != null) {
+                        block = block.moveDown();
+                    }
+                }
+                newGrid[index] = block;
+            }
+        }
+        return new Board(width, height, newGrid);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -199,80 +281,5 @@ public class Board {
     @Override
     public String toString() {
         return "Board [width=" + width + ", height=" + height + ", grid=" + Arrays.toString(grid) + "]";
-    }
-
-    public Block[] getGrid() {
-        return grid;
-    }
-
-    public List<Integer> getLineClear() {
-        boolean[] completedLines = new boolean[height];
-
-        // search completed lines
-        for (int y = 0; y < height; y++) {
-            completedLines[y] = true;
-            for (int x = 0; x < width; x++) {
-                final Block block = getBlockAt(x, y);
-                if (block == null) {
-                    completedLines[y] = false;
-                }
-            }
-        }
-
-        List<Integer> linesClear = new ArrayList<Integer>();
-        int count = 0;
-        for (int i = 0; i < completedLines.length; i++) {
-            if (completedLines[i]) {
-                count++;
-                linesClear.add(i);
-            }
-        }
-        return linesClear;
-    }
-
-    public int getCompletedLinesNumber() {
-        boolean[] completedLines = new boolean[height];
-
-        // search completed lines
-        for (int y = 0; y < height; y++) {
-            completedLines[y] = true;
-            for (int x = 0; x < width; x++) {
-                final Block block = getBlockAt(x, y);
-                if (block == null) {
-                    completedLines[y] = false;
-                }
-            }
-        }
-
-        int count = 0;
-        for (boolean completed : completedLines) {
-            if (completed) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public Board insertPenaltyLine(int lineCount) {
-        final Block[] newGrid = Arrays.copyOf(grid, height * width);
-
-        int minIndex = lineCount * width;
-        int maxIndex = height * width;
-        for (int i = minIndex; i < maxIndex; i++) {
-            if (newGrid[i] != null) {
-                Block block = newGrid[i].moveUp();
-                int index = block.getY() * width + block.getX();
-                newGrid[index] = block;
-            }
-        }
-        for (int y = height - lineCount; y < height; y++) {
-            for (int x = 0; x < width - 1; x++) {
-                int index = y * width + x;
-                newGrid[index] = new Block(x, y, Tetromino.I);
-            }
-            int blankIndex = y * width + new Random().nextInt(width - 1);
-            newGrid[blankIndex] = null;
-        }
-        return new Board(width, height, newGrid);
     }
 }

@@ -4,7 +4,7 @@ import java.util.EventObject;
 
 import tetris.domain.game.TetrisId;
 
-public class TetrisEvent extends EventObject {
+public abstract class TetrisEvent extends EventObject {
 
     private final long timestamp;
 
@@ -21,4 +21,5 @@ public class TetrisEvent extends EventObject {
         return this.timestamp;
     }
 
+    public abstract void notify(TetrisListener listener);
 }

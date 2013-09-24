@@ -14,4 +14,10 @@ public class TetrisPenaltyLineReceived extends TetrisEvent {
     public int getLineCount() {
         return lineCount;
     }
+
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.receiveLinePenalty(this);
+
+    }
 }

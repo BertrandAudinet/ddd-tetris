@@ -15,4 +15,9 @@ public class TetrisScoreChanged extends TetrisEvent {
     public Score getScore() {
         return score;
     }
+
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.scoreChanged(this);
+    }
 }

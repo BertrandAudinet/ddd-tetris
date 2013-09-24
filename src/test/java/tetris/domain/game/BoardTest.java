@@ -140,4 +140,92 @@ public class BoardTest {
         Board expected = board;
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    public void testInsertLine_EmptyBoard_Inserted() {
+        final Board board = Board.emptyBoard(4, 5);
+
+        final Board actual = board.insertLine(0);
+
+        Block[] grid = new Block[20];
+        grid[0] = new Block(0, 0, Tetromino.T);
+        grid[1] = new Block(1, 0, Tetromino.T);
+        grid[2] = new Block(2, 0, Tetromino.T);
+        grid[3] = new Block(3, 0, Tetromino.T);
+        Board expected = new Board(4, 5, grid);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testInsertLine_BelowBlock_BlockIsLifted() {
+        final Board board = Board.emptyBoard(4, 5).fillBlock(new Block(0, 4, Tetromino.T));
+
+        final Board actual = board.insertLine(4);
+
+        Board expected = Board.emptyBoard(4, 5).fillBlock(new Block(0, 3, Tetromino.T)).fillLine(4);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testInsertLine_OverBlock_BlockIsUnchanged() {
+        final Board board = Board.emptyBoard(4, 5).fillBlock(new Block(0, 4, Tetromino.T));
+
+        final Board actual = board.insertLine(3);
+
+        Board expected = Board.emptyBoard(4, 5).fillLine(3).fillBlock(new Block(0, 4, Tetromino.T));
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test(expected = BlockOutOfBoundsException.class)
+    public void testInsertLine_FullBoard_RaiseException() {
+        final Board board = Board.emptyBoard(4, 5).fill();
+
+        try {
+            board.insertLine(3);
+        } catch (BlockOutOfBoundsException ex) {
+            Assert.assertEquals("Block out of range : Block [x=0, y=0, tetromino=T]", ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Test
+    public void testRemoveLine_EmptyBoard_BoardIsUnchanged() {
+        final Board board = Board.emptyBoard(4, 5);
+
+        final Board actual = board.removeLine(0);
+
+        Board expected = Board.emptyBoard(4, 5);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testRemoveLine_OnBlock_BlockIsCleared() {
+        final Board board = Board.emptyBoard(4, 5).fillBlock(new Block(0, 4, Tetromino.T));
+
+        final Board actual = board.removeLine(4);
+
+        Board expected = Board.emptyBoard(4, 5);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testInsertLine_BelowBlock_BlockIsLowered() {
+        final Board board = Board.emptyBoard(4, 5).fillBlock(new Block(0, 3, Tetromino.T));
+
+        final Board actual = board.removeLine(4);
+
+        Board expected = Board.emptyBoard(4, 5).fillBlock(new Block(0, 4, Tetromino.T));
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testRemoveLine_OverBlock_BlockIsUnchanged() {
+        final Board board = Board.emptyBoard(4, 5).fillBlock(new Block(0, 4, Tetromino.T));
+
+        final Board actual = board.removeLine(3);
+
+        Board expected = Board.emptyBoard(4, 5).fillBlock(new Block(0, 4, Tetromino.T));
+        Assert.assertEquals(expected, actual);
+    }
 }

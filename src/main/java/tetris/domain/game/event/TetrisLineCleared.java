@@ -21,4 +21,9 @@ public class TetrisLineCleared extends TetrisEvent {
     public int getLineCount() {
         return lineCount;
     }
+
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.lineCleared(this);
+    }
 }

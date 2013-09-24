@@ -19,6 +19,12 @@ public class Score implements Serializable {
         this.points = 0;
     }
 
+    public Score(int level, int lines, int points) {
+        this.level = level;
+        this.lines = lines;
+        this.points = points;
+    }
+
     public Score addLines(int number) {
         final Score score = new Score(this.level);
         score.lines = this.lines + number;
@@ -60,4 +66,38 @@ public class Score implements Serializable {
     public int getPoints() {
         return points;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + level;
+        result = prime * result + lines;
+        result = prime * result + points;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Score other = (Score ) obj;
+        if (level != other.level)
+            return false;
+        if (lines != other.lines)
+            return false;
+        if (points != other.points)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Score [level=" + level + ", lines=" + lines + ", points=" + points + "]";
+    }
+
 }

@@ -22,4 +22,10 @@ public class TetrisPieceDropped extends TetrisEvent {
     public boolean isNewPiece() {
         return newPiece;
     }
+
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.pieceDropped(this);
+
+    }
 }

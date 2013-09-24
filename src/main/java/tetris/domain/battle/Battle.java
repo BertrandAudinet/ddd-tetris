@@ -56,11 +56,6 @@ public class Battle {
         return status;
     }
 
-    public List<Opponent> getOpponentsOf(TetrisId tetrisId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public boolean contains(TetrisId tetrisId) {
         for (Opponent opponent : opponents) {
             if (opponent.getTetrisId().equals(tetrisId)) {

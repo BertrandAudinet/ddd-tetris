@@ -16,4 +16,9 @@ public class TetrisPieceLocked extends TetrisEvent {
         return piece;
     }
 
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.pieceLocked(this);
+    }
+
 }

@@ -15,4 +15,9 @@ public class TetrisGameStarted extends TetrisEvent {
         return started;
     }
 
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.gameStarted(this);
+    }
+
 }

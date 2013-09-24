@@ -16,4 +16,10 @@ public class TetrisPieceRotated extends TetrisEvent {
         return piece;
     }
 
+    @Override
+    public void notify(TetrisListener listener) {
+        listener.pieceRotated(this);
+
+    }
+
 }
