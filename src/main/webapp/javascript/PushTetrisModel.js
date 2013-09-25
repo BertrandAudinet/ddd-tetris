@@ -1,22 +1,51 @@
+function TetrisCommand(tetrisId, action, data) {
+	this.tetrisId = tetrisId;
+	this.action = action;
+	this.data = data;
+};
+
+TetrisCommand.prototype.send = function() {
+	var command = this;
+	jQuery(function($) {
+		$.ajax({
+			type : "POST",
+			url : './ws/playing/' + command.tetrisId + '/' + command.action,
+			contentType : 'application/json',
+			data : command.data,
+			success : function() {
+				console.log(command.action +" piece to " + command.data + " for tetris id="
+						+ command.tetrisId);
+			}
+		});
+	});
+};
+
 /**
  * @constructor
  * @param [String}
  *            tetrisId
  */
-function RestTetrisModel(tetrisId) {
+function PushTetrisModel(tetrisId) {
 	// Call the parent constructor
 	TetrisModel.call(this);
 	this.tetrisId = tetrisId;
 	this.lastEventId = 0;
 	this.handlers = new Array();
+	this.commands = new Array();
 	var model = this;
 	this.timer = $.timer(function() {
+		while (model.commands.length > 0) {
+			var command = model.commands.shift();
+			if (command != null) {
+				command.send();
+			}
+		}
 		model.getEvent();
 		model.timer.once(refreshTime);
 	}, refreshTime, false);
 };
 
-RestTetrisModel.prototype.playNewTetris = function() {
+PushTetrisModel.prototype.playNewTetris = function() {
 	var model = this;
 	jQuery(function($) {
 		$.ajax({
@@ -35,7 +64,7 @@ RestTetrisModel.prototype.playNewTetris = function() {
 	return this.tetrisId;
 };
 
-RestTetrisModel.prototype.start = function() {
+PushTetrisModel.prototype.start = function() {
 	var model = this;
 	$.get('./ws/playing/' + model.tetrisId + '/start').done(
 			function(data, textStatus, jqXHR) {
@@ -45,7 +74,7 @@ RestTetrisModel.prototype.start = function() {
 	});
 };
 
-RestTetrisModel.prototype.getEvent = function() {
+PushTetrisModel.prototype.getEvent = function() {
 	var model = this;
 	jQuery(function($) {
 		$.get(
@@ -69,61 +98,33 @@ RestTetrisModel.prototype.getEvent = function() {
 	});
 };
 
-RestTetrisModel.prototype.addTetrisEventHandler = function(handler) {
+PushTetrisModel.prototype.addTetrisEventHandler = function(handler) {
 	this.handlers.push(handler);
 	this.timer.once(refreshTime);
 };
 
-RestTetrisModel.prototype.rotatePiece = function(direction) {
-	var model = this;
-	jQuery(function($) {
-		$.ajax({
-			type : "POST",
-			url : './ws/playing/' + model.tetrisId + '/rotate',
-			contentType : 'application/json',
-			data : '{ "rotate" : { "direction": ' + direction + ' }}',
-			success : function() {
-				console.log("rotate piece to " + direction + " for tetris id="
-						+ model.tetrisId);
-			}
-		});
-	});
-	return this;
+PushTetrisModel.prototype.rotatePiece = function(direction) {
+	if (this.commands.length < 5) {
+		var command = new TetrisCommand(this.tetrisId, 'rotate', '{ "rotate" : { "direction": ' + direction + ' }}');
+		this.commands.push(command);
+	}
 };
 
-RestTetrisModel.prototype.movePiece = function(direction) {
-	var model = this;
-	jQuery(function($) {
-		$.ajax({
-			type : "POST",
-			url : './ws/playing/' + model.tetrisId + '/move',
-			contentType : 'application/json',
-			data : '{ "move" : { "direction": ' + direction + '}}',
-			success : function() {
-				console.log("move piece to " + direction + " for tetris id="
-						+ model.tetrisId);
-			}
-		});
-	});
-	return this;
+PushTetrisModel.prototype.movePiece = function(direction) {
+	if (this.commands.length < 5) {
+		var command = new TetrisCommand(this.tetrisId, 'move', '{ "move" : { "direction": ' + direction + '}}');
+		this.commands.push(command);
+	}
 };
 
-RestTetrisModel.prototype.dropPiece = function() {
-	var model = this;
-	jQuery(function($) {
-		$.ajax({
-			type : "POST",
-			url : './ws/playing/' + model.tetrisId + '/drop',
-			contentType : 'application/json',
-			success : function() {
-				console.log("drop piece for tetris id=" + model.tetrisId);
-			}
-		});
-	});
-	return this;
+PushTetrisModel.prototype.dropPiece = function() {
+	if (this.commands.length < 5) {
+		var command = new TetrisCommand(this.tetrisId, 'drop', null);
+		this.commands.push(command);
+	}
 };
 
-RestTetrisModel.prototype.getBoard = function() {
+PushTetrisModel.prototype.getBoard = function() {
 	var model = this;
 	var board = null;
 	jQuery(function($) {

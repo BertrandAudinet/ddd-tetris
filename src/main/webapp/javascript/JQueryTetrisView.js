@@ -74,7 +74,7 @@ JQueryTetrisView.prototype.addRotatePieceHandler = function(rotatePieceHandler) 
 
 JQueryTetrisView.prototype.clearGrid = function() {
 	this.grid.find("td").removeClass(
-			'IShape OShape TShape JShape lShape SShape ZShape PShape');
+			'IShape OShape TShape JShape LShape SShape ZShape PShape');
 };
 
 JQueryTetrisView.prototype.hideShape = function() {
@@ -113,10 +113,16 @@ JQueryTetrisView.prototype.displayBlock = function(x, y, tetromino) {
 	block.addClass(tetromino + 'Shape');
 };
 
-JQueryTetrisView.prototype.displayScore = function(level, lines, points) {
+JQueryTetrisView.prototype.scoreUp = function(level, lines, points) {
 	$(".score").remove();
 	this.score.append('<span class="score">+' + points + '</span>');
 	$(".score").animate({ top: "-200px", opacity: 0 }, 1500);
+};
+
+JQueryTetrisView.prototype.displayScore = function(level, lines, points) {
+	$("#score_level").html(level);
+	$("#score_lines").html(lines);
+	$("#score_points").html(points);
 };
 
 JQueryTetrisView.prototype.clearLine = function(line) {

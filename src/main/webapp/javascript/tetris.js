@@ -40,6 +40,12 @@ TetrisView.prototype.displayPiece = function() {
 TetrisView.prototype.displayBlock = function(x, y, tetromino) {
 };
 
+TetrisView.prototype.displayScore = function(level, lines, points) {
+};
+
+TetrisView.prototype.scoreUp = function(level, lines, points) {
+};
+
 /**
  * @constructor
  */
@@ -182,6 +188,8 @@ TetrisPresenter.prototype.dropPiece = function(event) {
 				this.view.displayBlock(block.x, block.y, block.tetromino);
 			}
 		}
+		var score = board.score;
+		this.view.displayScore(score.level, score.lines, score.points);
 	}
 	this.movePiece(event);
 };
@@ -193,7 +201,7 @@ TetrisPresenter.prototype.movePiece = function(event) {
 
 TetrisPresenter.prototype.changeScore = function(event) {
 	var score = event.score;
-	this.view.displayScore(score.level, score.lines, score.points);
+	this.view.scoreUp(score.level, score.lines, score.points);
 };
 
 TetrisPresenter.prototype.clearLine = function(event) {
@@ -219,4 +227,6 @@ TetrisPresenter.prototype.reLoadGrid = function(event) {
 			this.view.displayBlock(block.x, block.y, block.tetromino);
 		}
 	}
+	var score = board.score;
+	this.view.displayScore(score.level, score.lines, score.points);
 };

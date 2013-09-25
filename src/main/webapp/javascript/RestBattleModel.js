@@ -11,6 +11,7 @@ function RestBattleModel(battleId, tetrisId) {
 	var model = this;
 	this.timer = $.timer(function() {
 		model.getEvents();
+		model.timer.once(refreshTime);
 	}, refreshTime, false);
 };
 
@@ -58,7 +59,6 @@ RestBattleModel.prototype.getEvents = function() {
 						}
 						model.lastEventId = event.lastEventId;
 					}
-					model.timer.once(refreshTime);
 					
 				}).fail(function(jqXHR, textStatus, errorThrown) {
 					model.timer.stop();

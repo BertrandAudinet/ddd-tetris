@@ -157,6 +157,7 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
 
     @Override
     public List<TetrisEvent> getEvents(TetrisId tetrisId, long lastEventId) {
+        log.info("Get events for tetris " + tetrisId + " at last event id " + lastEventId);
         return tetrisEventRepository.findNextTetrisEvents(tetrisId, lastEventId);
     }
 }
