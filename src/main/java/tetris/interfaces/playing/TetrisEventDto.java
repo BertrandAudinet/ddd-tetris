@@ -47,6 +47,8 @@ public class TetrisEventDto {
 
     private ScoreDto score;
 
+    private int clearLine;
+
     public String getType() {
         return type;
     }
@@ -146,6 +148,7 @@ public class TetrisEventDto {
         @Override
         public void lineCleared(TetrisLineCleared event) {
             dto.setType(TetrisEventDto.TETRIS_LINE_CLEARED);
+            dto.setClearLine(event.getLine());
             dto.setLineCompleted(event.getLineCount());
         }
 
@@ -176,6 +179,14 @@ public class TetrisEventDto {
     public void setPiece(PieceDto piece) {
         this.piece = piece;
     };
+
+    public void setClearLine(int ClearLine) {
+        clearLine = ClearLine;
+    }
+
+    public int getClearLine() {
+        return clearLine;
+    }
 
     public void setScore(ScoreDto score) {
         this.score = score;

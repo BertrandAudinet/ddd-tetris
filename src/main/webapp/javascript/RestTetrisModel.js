@@ -63,8 +63,8 @@ RestTetrisModel.prototype.getEvent = function() {
 					}
 					model.timer.once(refreshTime);
 				}).fail(function(jqXHR, textStatus, errorThrown) {
-			model.timer.stop();
-			alert('Error = ' + errorThrown);
+					model.timer.stop();
+					alert('Error = ' + errorThrown);
 		});
 	});
 };

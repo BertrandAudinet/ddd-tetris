@@ -13,6 +13,7 @@ function JQueryTetrisView(html, isActive) {
 	this.keyDowns = {};
 	var cssPadding = this.grid.parent().css("padding-left");
 	this.padding = 1 * cssPadding.substring(0, cssPadding.length-2);
+	$(".score").remove();
 };
 
 // inherit TetrisView
@@ -21,90 +22,53 @@ JQueryTetrisView.prototype = new TetrisView();
 // correct the constructor pointer because it points to JQueryTetrisView
 JQueryTetrisView.prototype.constructor = JQueryTetrisView;
 
+
 // replace all methods of TetrisView
 JQueryTetrisView.prototype.addPushStartHandler = function(pushStartHandler) {
 	this.pushStartButton.click(pushStartHandler);
 };
 
-JQueryTetrisView.prototype.onKey = function(event, handler) {
-	var lastTimeStamp = 0;
-	if (this.keyDowns[event.which] != undefined) {
-		lastTimeStamp = this.keyDowns[event.which];
-	}
-	if (event.timeStamp - lastTimeStamp >= refreshTime*2) {
-		this.keyDowns[event.which] = event.timeStamp;
-		handler();
-	}
-};
-
 JQueryTetrisView.prototype.addMoveLeftHandler = function(moveLeftHandler) {
-	var view = this;
 	if (this.isActive) {
 		jQuery(document).keydown(function(event) {
 			if (event.which == 37) {
-				view.onKey(event, moveLeftHandler);
+				moveLeftHandler();
 				event.preventDefault();
-			}
-		});
-		jQuery(document).keyup(function(event) {
-			if (event.which == 37) {
-				view.keyDowns[event.which] = 0;
 			}
 		});
 	}
 };
 
 JQueryTetrisView.prototype.addMoveRightHandler = function(moveRightHandler) {
-	var view = this;
 	if (this.isActive) {
 		jQuery(document).keydown(function(event) {
 			if (event.which == 39) {
-				view.onKey(event, moveRightHandler);
+				moveRightHandler();
 				event.preventDefault();
 			}
 		});
-		jQuery(document).keyup(function(event) {
-			if (event.which == 39) {
-				view.keyDowns[event.which] = 0;
-			}
-		});
-
 	}
 };
 
 JQueryTetrisView.prototype.addDropPieceHandler = function(dropPieceHandler) {
-	var view = this;
 	if (this.isActive) {
 		jQuery(document).keydown(function(event) {
 			if (event.which == 40) {
-				view.onKey(event, dropPieceHandler);
+				dropPieceHandler();
 				event.preventDefault();
 			}
 		});
-		jQuery(document).keyup(function(event) {
-			if (event.which == 40) {
-				view.keyDowns[event.which] = 0;
-			}
-		});
-
 	}
 };
 
 JQueryTetrisView.prototype.addRotatePieceHandler = function(rotatePieceHandler) {
-	var view = this;
 	if (this.isActive) {
 		jQuery(document).keydown(function(event) {
 			if (event.which == 38) {
-				view.onKey(event, rotatePieceHandler);
+				rotatePieceHandler();
 				event.preventDefault();
 			}
 		});
-		jQuery(document).keyup(function(event) {
-			if (event.which == 38) {
-				view.keyDowns[event.which] = 0;
-			}
-		});
-
 	}
 };
 
@@ -150,7 +114,13 @@ JQueryTetrisView.prototype.displayBlock = function(x, y, tetromino) {
 };
 
 JQueryTetrisView.prototype.displayScore = function(level, lines, points) {
-	$(".scoreChanged").remove();
+	$(".score").remove();
 	this.score.append('<span class="score">+' + points + '</span>');
-	$(".score").delay(500).addClass("scoreChanged");
+	$(".score").animate({ top: "-200px", opacity: 0 }, 1500);
 };
+
+JQueryTetrisView.prototype.clearLine = function(line) {
+	var block = $(this.grid.find('tr')[line]);
+	//block.fadeOut(100).fadeIn(10);
+};
+

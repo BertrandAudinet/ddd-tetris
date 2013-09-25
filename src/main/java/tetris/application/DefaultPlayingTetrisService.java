@@ -151,7 +151,7 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     }
 
     Tetromino nextTetromino() {
-        final int nextInt = new Random().nextInt(Tetromino.values().length - 1);
+        final int nextInt = new Random().nextInt(Tetromino.values().length);
         return Tetromino.values()[nextInt];
     }
 

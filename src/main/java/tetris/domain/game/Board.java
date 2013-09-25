@@ -250,6 +250,12 @@ public class Board {
         return new Board(width, height, newGrid);
     }
 
+    public Board clearBlock(int x, int y) {
+        final Block[] newGrid = Arrays.copyOf(grid, height * width);
+        newGrid[y * width + x] = null;
+        return new Board(width, height, newGrid);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

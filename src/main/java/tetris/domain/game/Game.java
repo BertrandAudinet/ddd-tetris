@@ -2,6 +2,7 @@ package tetris.domain.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import tetris.domain.game.event.TetrisEvent;
 import tetris.domain.game.event.TetrisGameStarted;
@@ -150,7 +151,8 @@ public class Game {
     public void addPenaltyLine(int lineCount) {
         int lastLine = board.getHeight() - 1;
         for (int i = 0; i < lineCount; i++) {
-            board = board.insertLine(lastLine);
+            final int clearX = new Random().nextInt(board.getWidth());
+            board = board.insertLine(lastLine).clearBlock(clearX, lastLine);
         }
         fireTetrisEvent(new TetrisPenaltyLineReceived(tetrisId, lineCount));
 

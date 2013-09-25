@@ -22,6 +22,9 @@ TetrisView.prototype.addRotatePieceHandler = function(handleRotatePiece) {
 TetrisView.prototype.clearGrid = function() {
 };
 
+TetrisView.prototype.clearLine = function(line) {
+};
+
 TetrisView.prototype.hideShape = function() {
 };
 
@@ -152,6 +155,8 @@ TetrisPresenter.prototype.onTetrisEvent = function(event) {
 		this.reLoadGrid(event);
 	} else if (type == "TETRIS_SCORE_CHANGED") {
 		this.changeScore(event);
+	} else if (type == "TETRIS_LINE_CLEARED") {
+		this.clearLine(event);
 	} else {
 		console.log("Event [type=" + event.type + "]");
 	}
@@ -191,6 +196,9 @@ TetrisPresenter.prototype.changeScore = function(event) {
 	this.view.displayScore(score.level, score.lines, score.points);
 };
 
+TetrisPresenter.prototype.clearLine = function(event) {
+	this.view.clearLine(event.clearLine);
+};
 
 TetrisPresenter.prototype.loadGrid = function(event) {
 	var piece = event.piece;

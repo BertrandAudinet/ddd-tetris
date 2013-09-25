@@ -1,4 +1,4 @@
-var refreshTime =  250;	
+var refreshTime =  500;	
 
 /**
  * @constructor
