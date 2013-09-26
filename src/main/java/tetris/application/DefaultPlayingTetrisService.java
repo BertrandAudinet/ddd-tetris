@@ -107,6 +107,9 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
         final TetrisEventQueue eventQueue = new TetrisEventQueue();
         game.addTetrisListener(eventQueue);
 
+        if (game.getPiece() == null) {
+            game.dropNewPiece(nextTetromino());
+        }
         game.start();
 
         game.removeTetrisListener(listener);
@@ -121,6 +124,12 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
     public void runTetris(TetrisId tetrisId) {
         final Game game = gameRepository.find(tetrisId);
 
+        long delay = 600 - game.getScore().getLevel() * 60;
+        long now = System.currentTimeMillis();
+        if (now - game.getTimestamp() < delay) {
+            return;
+        }
+
         final TetrisListener listener = new TetrisAdapter() {
 
             @Override
@@ -133,9 +142,6 @@ public class DefaultPlayingTetrisService implements PlayingTetrisService {
         final TetrisEventQueue eventQueue = new TetrisEventQueue();
         game.addTetrisListener(eventQueue);
 
-        if (game.getPiece() == null) {
-            game.dropNewPiece(nextTetromino());
-        }
         game.fallPiece();
         if (game.getPiece() == null) {
             game.dropNewPiece(nextTetromino());

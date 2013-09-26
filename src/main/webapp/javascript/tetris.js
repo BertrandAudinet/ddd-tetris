@@ -46,6 +46,9 @@ TetrisView.prototype.displayScore = function(level, lines, points) {
 TetrisView.prototype.scoreUp = function(level, lines, points) {
 };
 
+TetrisView.prototype.levelUp = function(level) {
+};
+
 /**
  * @constructor
  */
@@ -94,6 +97,7 @@ function TetrisPresenter(view, model) {
 };
 
 TetrisPresenter.prototype.init = function() {
+	
 	var presenter = this;
 	this.view.addPushStartHandler(function() {
 		presenter.pushStart();
@@ -113,7 +117,7 @@ TetrisPresenter.prototype.init = function() {
 	this.model.addTetrisEventHandler(function(event) {
 		presenter.onTetrisEvent(event);
 	});
-	
+
 	this.view.clearGrid();
 	this.view.hideShape();
 
@@ -163,6 +167,8 @@ TetrisPresenter.prototype.onTetrisEvent = function(event) {
 		this.changeScore(event);
 	} else if (type == "TETRIS_LINE_CLEARED") {
 		this.clearLine(event);
+	} else if (type == "TETRIS_LEVELUP_PERFORMED") {
+		this.levelUpPerformed(event);
 	} else {
 		console.log("Event [type=" + event.type + "]");
 	}
@@ -183,7 +189,7 @@ TetrisPresenter.prototype.dropPiece = function(event) {
 		this.view.hideShape();
 		var blocks = board.blocks;
 		if (blocks) {
-			for(var i=0; i < blocks.length; i++){
+			for ( var i = 0; i < blocks.length; i++) {
 				var block = blocks[i];
 				this.view.displayBlock(block.x, block.y, block.tetromino);
 			}
@@ -204,6 +210,10 @@ TetrisPresenter.prototype.changeScore = function(event) {
 	this.view.scoreUp(score.level, score.lines, score.points);
 };
 
+TetrisPresenter.prototype.levelUpPerformed = function(event) {
+	this.view.levelUp(event.level);
+};
+
 TetrisPresenter.prototype.clearLine = function(event) {
 	this.view.clearLine(event.clearLine);
 };
@@ -211,7 +221,7 @@ TetrisPresenter.prototype.clearLine = function(event) {
 TetrisPresenter.prototype.loadGrid = function(event) {
 	var piece = event.piece;
 	var blocks = piece.blocks;
-	for(var i=0; i < blocks.length; i++){
+	for ( var i = 0; i < blocks.length; i++) {
 		var block = blocks[i];
 		this.view.displayBlock(block.x, block.y, block.tetromino);
 	}
@@ -222,7 +232,7 @@ TetrisPresenter.prototype.reLoadGrid = function(event) {
 	var blocks = board.blocks;
 	this.view.clearGrid();
 	if (blocks) {
-		for(var i=0; i < blocks.length; i++){
+		for ( var i = 0; i < blocks.length; i++) {
 			var block = blocks[i];
 			this.view.displayBlock(block.x, block.y, block.tetromino);
 		}

@@ -30,11 +30,11 @@
 }
 
 .LShape {
-	background-color: orange;
+	background-color: darkorange;
 }
 
 .SShape {
-	background-color: green;
+	background-color: lightgreen;
 }
 
 .ZShape {
@@ -52,6 +52,7 @@
 
 .board table {
 	border-collapse: collapse;
+	background: lightgray;	
 }
 
 .board td {
@@ -66,6 +67,10 @@
 	position: absolute;
 	top: 26px;
 	left: 26px;
+}
+
+.shape table {
+	background: transparent;	
 }
 
 .shape:hover {
@@ -192,7 +197,7 @@ div.shape td {
 .score {
 	position: relative;
 	top: 0px;
-	color: black;
+	color: darkcyan;
 	font-style: italic;
 	font-weight: bolder;
 	font-size: large;
@@ -206,7 +211,7 @@ div.shape td {
 .scoreChanged {
 	font-size: xx-small;
 	top: -250px;
-	color: yellow;
+	color: darkcyan;
 	opacity: 0;
 }
 
@@ -214,4 +219,15 @@ div.shape td {
 	position: absolute;
 	left: 400px;
 	top: 50px;
+}
+
+#levelUp {
+	color: darkcyan;
+    font-size: large;
+    font-style: italic;
+    font-weight: bolder;
+    left: 40px;
+    position: absolute;
+    text-align: center;
+    top: 150px;
 }

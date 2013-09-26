@@ -13,28 +13,48 @@ public class Score implements Serializable {
 
     }
 
-    public Score(int level) {
-        this.level = level;
-        this.lines = 0;
-        this.points = 0;
-    }
-
     public Score(int level, int lines, int points) {
         this.level = level;
         this.lines = lines;
         this.points = points;
     }
 
+    public Score(int level, int lines) {
+        this.level = level;
+        this.lines = lines;
+        this.points = calculatePoints(level, lines);
+    }
+
+    public Score(int level) {
+        this(level, 0);
+    }
+
+    public Score add(Score score) {
+        int newLevel = level;
+        int newLines = lines + score.lines;
+        int newPoints = points + score.points;
+
+        if (newLines >= level * 10) {
+            newLevel++;
+        }
+
+        return new Score(newLevel, newLines, newPoints);
+    }
+
     public Score addLines(int number) {
         final Score score = new Score(this.level);
         score.lines = this.lines + number;
-        score.points = this.points + (this.level + 1) * linePoints(number);
+        score.points = this.points + this.level * linePoints(number);
         return score;
     }
 
-    private int linePoints(int number) {
+    private int calculatePoints(int level, int lines) {
+        return this.level * linePoints(lines);
+    }
+
+    private int linePoints(int lines) {
         int points = 0;
-        switch (number) {
+        switch (lines) {
             case 1:
                 points = 100;
                 break;

@@ -10,23 +10,28 @@ function JQueryTetrisView(html, isActive) {
 	this.shapes = this.component.find(".board .shape");
 	this.score = $(this.component.find(".scoreUp"));
 	this.isActive = isActive;
-	this.keyDowns = {};
 	var cssPadding = this.grid.parent().css("padding-left");
 	this.padding = 1 * cssPadding.substring(0, cssPadding.length-2);
 	$(".score").remove();
+	this.divLevelUp = this.component.find('#levelUp');
+	this.divLevelUp.hide();
 };
 
 // inherit TetrisView
-JQueryTetrisView.prototype = new TetrisView();
+//JQueryTetrisView.prototype = new TetrisView();
 
 // correct the constructor pointer because it points to JQueryTetrisView
-JQueryTetrisView.prototype.constructor = JQueryTetrisView;
+//JQueryTetrisView.prototype.constructor = JQueryTetrisView;
 
+JQueryTetrisView.prototype.levelUp = function(level) {
+	this.divLevelUp.fadeIn(200).fadeOut(300);
+};
 
 // replace all methods of TetrisView
 JQueryTetrisView.prototype.addPushStartHandler = function(pushStartHandler) {
 	this.pushStartButton.click(pushStartHandler);
 };
+
 
 JQueryTetrisView.prototype.addMoveLeftHandler = function(moveLeftHandler) {
 	if (this.isActive) {
@@ -38,7 +43,7 @@ JQueryTetrisView.prototype.addMoveLeftHandler = function(moveLeftHandler) {
 		});
 	}
 };
-
+ 
 JQueryTetrisView.prototype.addMoveRightHandler = function(moveRightHandler) {
 	if (this.isActive) {
 		jQuery(document).keydown(function(event) {
@@ -129,4 +134,5 @@ JQueryTetrisView.prototype.clearLine = function(line) {
 	var block = $(this.grid.find('tr')[line]);
 	//block.fadeOut(100).fadeIn(10);
 };
+
 

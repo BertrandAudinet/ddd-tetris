@@ -18,4 +18,6 @@ public interface TetrisListener extends EventListener {
     void scoreChanged(TetrisScoreChanged event);
 
     void receiveLinePenalty(TetrisPenaltyLineReceived event);
+
+    void levelUpPerformed(TetrisLevelUpPerformed event);
 }

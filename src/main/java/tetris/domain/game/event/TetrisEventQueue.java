@@ -39,6 +39,10 @@ public class TetrisEventQueue implements TetrisListener {
         return new TetrisEventQueue(events);
     }
 
+    public TetrisEvent getLastEvent() {
+        return queue.peek();
+    }
+
     @Override
     public void lineCleared(TetrisLineCleared event) {
         push(event);
@@ -79,8 +83,9 @@ public class TetrisEventQueue implements TetrisListener {
         push(event);
     }
 
-    public TetrisEvent getLastEvent() {
-        return queue.peek();
+    @Override
+    public void levelUpPerformed(TetrisLevelUpPerformed event) {
+        push(event);
     }
 
 }

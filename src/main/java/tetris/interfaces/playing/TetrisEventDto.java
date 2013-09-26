@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import tetris.domain.game.event.TetrisEvent;
 import tetris.domain.game.event.TetrisGameStarted;
+import tetris.domain.game.event.TetrisLevelUpPerformed;
 import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
 import tetris.domain.game.event.TetrisPenaltyLineReceived;
@@ -27,6 +28,8 @@ public class TetrisEventDto {
 
     public static final String TETRIS_SCORE_CHANGED = "TETRIS_SCORE_CHANGED";
 
+    public static final String TETRIS_LEVELUP_PERFORMED = "TETRIS_LEVELUP_PERFORMED";
+
     public static String TETRIS_LINE_CLEARED = "TETRIS_LINE_CLEARED";
 
     public static String TETRIS_PENALTY_LINE_RECEIVED = "TETRIS_PENALTY_LINE_RECEIVED";
@@ -48,6 +51,8 @@ public class TetrisEventDto {
     private ScoreDto score;
 
     private int clearLine;
+
+    private int level;
 
     public String getType() {
         return type;
@@ -121,6 +126,8 @@ public class TetrisEventDto {
                 scoreChanged((TetrisScoreChanged ) event);
             } else if (event instanceof TetrisPenaltyLineReceived) {
                 receiveLinePenalty((TetrisPenaltyLineReceived ) event);
+            } else if (event instanceof TetrisLevelUpPerformed) {
+                levelUpPerformed((TetrisLevelUpPerformed ) event);
             } else {
                 throw new IllegalArgumentException("Cannot map event " + event);
             }
@@ -174,11 +181,25 @@ public class TetrisEventDto {
         public void receiveLinePenalty(TetrisPenaltyLineReceived event) {
             dto.setType(TetrisEventDto.TETRIS_PENALTY_LINE_RECEIVED);
         }
+
+        @Override
+        public void levelUpPerformed(TetrisLevelUpPerformed event) {
+            dto.setType(TetrisEventDto.TETRIS_LEVELUP_PERFORMED);
+            dto.setLevel(event.getLevel());
+        }
     }
 
     public void setPiece(PieceDto piece) {
         this.piece = piece;
     };
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
 
     public void setClearLine(int ClearLine) {
         clearLine = ClearLine;

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import tetris.domain.game.event.TetrisEvent;
 import tetris.domain.game.event.TetrisGameStarted;
+import tetris.domain.game.event.TetrisLevelUpPerformed;
 import tetris.domain.game.event.TetrisLineCleared;
 import tetris.domain.game.event.TetrisListener;
 import tetris.domain.game.event.TetrisPenaltyLineReceived;
@@ -28,22 +29,19 @@ public class Game {
 
     private boolean lost = false;
 
-    private Score score = new Score(0);
+    private Score score = new Score(1);
 
-    public Game(Board board, Shape piece) {
-        this.board = board;
-        this.piece = piece;
-    }
-
-    public Game(TetrisId tetrisId) {
-        this.tetrisId = tetrisId;
-        this.board = Board.defaultBoard();
-    }
+    private long timestamp;
 
     public Game(TetrisId tetrisId, Board board, Shape piece) {
         this.tetrisId = tetrisId;
         this.board = board;
         this.piece = piece;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public Game(TetrisId tetrisId) {
+        this(tetrisId, Board.defaultBoard(), null);
     }
 
     public void movePiece(Direction direction) {
@@ -89,15 +87,22 @@ public class Game {
             }
 
             if (completedLine.size() > 0) {
-                score = score.addLines(completedLine.size());
-                TetrisScoreChanged event = new TetrisScoreChanged(tetrisId, score);
+                final Score scoreUp = new Score(score.getLevel(), completedLine.size());
+                TetrisScoreChanged event = new TetrisScoreChanged(tetrisId, scoreUp);
                 fireTetrisEvent(event);
+                final Score newScore = score.add(scoreUp);
+                if (newScore.getLevel() > score.getLevel()) {
+                    fireTetrisEvent(new TetrisLevelUpPerformed(tetrisId, newScore.getLevel()));
+                }
+                score = newScore;
+
             }
         } else {
             this.piece = movePiece;
             TetrisPieceDropped event = new TetrisPieceDropped(tetrisId, piece, false);
             fireTetrisEvent(event);
         }
+        this.timestamp = System.currentTimeMillis();
     }
 
     public Board getBoard() {
@@ -195,5 +200,9 @@ public class Game {
         for (TetrisListener listener : listeners) {
             event.notify(listener);
         }
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }

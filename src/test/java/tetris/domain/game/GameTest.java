@@ -23,7 +23,7 @@ public class GameTest {
 
     @Test
     public void testMovePiece_FullBoard_NotMoved() {
-        final Game game = new Game(Board.defaultBoard().fill(), new Shape(5, 0, Tetromino.I));
+        final Game game = new Game(new TetrisId("T1"), Board.defaultBoard().fill(), new Shape(5, 0, Tetromino.I));
 
         game.movePiece(Direction.LEFT);
 

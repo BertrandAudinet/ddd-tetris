@@ -47,7 +47,7 @@
 	<task:scheduler id="gameScheduler" pool-size="10"/>
 
 	<task:scheduled-tasks scheduler="gameScheduler">
-    	<task:scheduled ref="tetrisScheduler" method="run" fixed-rate="800"/>
+    	<task:scheduled ref="tetrisScheduler" method="run" fixed-rate="100" />
     	<task:scheduled ref="battleScheduler" method="run" fixed-rate="30000"/>
 	</task:scheduled-tasks>
 
