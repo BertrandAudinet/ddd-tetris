@@ -12,9 +12,8 @@ function JQueryTetrisView(html, isActive) {
 	this.isActive = isActive;
 	var cssPadding = this.grid.parent().css("padding-left");
 	this.padding = 1 * cssPadding.substring(0, cssPadding.length-2);
-	var cssWidth = this.grid.find("td").css("width");
-	var cssBorder = this.grid.find("td").css("border-right-width");
-	this.blockSize = 1 * cssWidth.substring(0, cssWidth.length-2) + 1 * cssBorder.substring(0, cssBorder.length-2);
+	var cssHeight = this.grid.find("tr").css("height");
+	this.blockSize = 1 * cssHeight.substring(0, cssHeight.length-2);
 	$(".score").remove();
 	this.divLevelUp = this.component.find('#levelUp');
 	this.divLevelUp.hide();
