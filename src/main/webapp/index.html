@@ -30,27 +30,55 @@ jQuery(document).ready(
 
 <link rel="stylesheet" href="css/tetris.css">
 <style type="text/css">
-	.tetrisView {
-		float: left;
-		display: inline-block;
-	}
+body {
+	margin: 0px;
+	line-height: 1em;
+}
 
-	.battleView {
-		float: right;
-		display: inline-block;
-	}
+.nav-header {
+	background-color: #808080;
+	border-bottom: 1px solid black;
+	padding-top: 1em;
+	padding-bottom: 0.1em;
+}
 
+.button {
+	background-color: #008B8B;
+	padding: 0.5em;
+	margin: 0.5em 0.5em 0.5em;
+	border: 1px solid black;
+}
+
+.button a {
+	color: white;
+	text-decoration: none;
+	font-weight: 700;
+	line-height: 2em;
+	
+	
+}
+
+.tetrisView {
+	float: left;
+	display: inline-block;
+}
+
+.battleView {
+	float: right;
+	display: inline-block;
+}
 </style>
 
 </head>
 <body>
 	<div class="application">
-	<ul>
-		<li><a href="#tetrisView" class="pushStart">PUSH START</a></li>
-		<li><a href="#battleView" class="joinBattle">JOIN BATTLE</a></li>
-	</ul>
-	<div id="tetrisView" class="tetrisView"></div>
-	<div id="battleView" class="battleView"></div>
+		<div class="nav-header">
+			<span class="button"><a href="#tetrisView" class="pushStart">PUSH
+					START</a></span> <span class="button"><a href="#battleView"
+				class="joinBattle">JOIN BATTLE</a></span>
+		</div>
+		<div id="tetrisView" class="tetrisView"></div>
+		<div id="battleView" class="battleView"></div>
 	</div>
 </body>
 </html>

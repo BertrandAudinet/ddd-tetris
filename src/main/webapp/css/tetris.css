@@ -2,10 +2,10 @@
 	background-color: black;
 	border-color: gray;
 	border-style: solid;
-	border-width: thin;
+	border-width: 0.1em;
 	display: inline-block;
-	height: 10px;
-	width: 10px;
+	height: 1em;
+	width: 1em;
 }
 
 .breaker {
@@ -47,7 +47,7 @@
 
 .board {
 	position: relative;
-	padding: 26px;
+	padding: 2em;
 }
 
 .board table {
@@ -56,17 +56,18 @@
 }
 
 .board td {
-	height: 10px;
-	width: 10px;
+	height: 1em;
+	width: 1em;
 	border-color: gray;
 	border-style: solid;
-	border-width: thin;
+	border-width: 0.1em;
+	padding: 0em;
 }
 
 .shape {
 	position: absolute;
-	top: 26px;
-	left: 26px;
+	top: 2.6em;
+	left: 2.6em;
 }
 
 .shape table {
@@ -104,15 +105,15 @@
 }
 
 #IShape {
-	top: 26px;
-	left: 26px;
+	top: 2.6em;
+	left: 2.6em;
 	transform-origin: 37.5% 37.5%;
 	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
 	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
 }
 
 #TShape {
-	top: 26px;
+	top: 2.6em;
 	left: 184px;
 	transform-origin: 37.5% 37.5%;
 	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
@@ -121,7 +122,7 @@
 
 #LShape {
 	top: 161px;
-	left: 26px;
+	left: 2.6em;
 	transform-origin: 37.5% 37.5%;
 	-ms-transform-origin: 37.5% 37.5%; /* IE 9 */
 	-webkit-transform-origin: 37.5% 37.5%; /* Safari and Chrome */
@@ -137,7 +138,7 @@
 
 #ZShape {
 	top: 276px;
-	left: 26px;
+	left: 2.6em;
 	transform-origin: 50% 50%;
 }
 
@@ -157,11 +158,11 @@
 }
 
 div.shape td {
-	height: 10px;
-	width: 10px;
+	height: 1em;
+	width: 1em;
 	border-color: transparent;
 	border-style: solid;
-	border-width: thin;
+	border-width: 0.1em;
 	text-align: center;
 }
 
