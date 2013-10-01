@@ -196,13 +196,4 @@ public class GameTest {
         Assert.assertEquals(2, actual.getLineCount());
     }
 
-    @Test
-    public void testAddPenaltyLine_EmptyBoard_BoardIsFilled() {
-        final Game game = new Game(new TetrisId("T1"));
-
-        game.addPenaltyLine(2);
-
-        Board expected = Board.defaultBoard().fillLine(20).fillLine(21);
-        Assert.assertEquals(expected, game.getBoard());
-    }
 }
